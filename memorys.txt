@@ -6,3 +6,5 @@ source .venv/bin/activate
 pip install pdg Django django-cors-headers djangorestframework
 
 wget https://pdg.lbl.gov/2024/api/pdgall-2024-v0.1.2.sqlite
+ 
+ctrl+L очистить терминал 
