@@ -7,6 +7,15 @@ import { API_PARTICLES_URL, API_NAMES_URL } from "./constants";
 import ReactModal from 'react-modal';
 import { SimpleModal } from "./components/SimpleModal/SimpleModal";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast.success('Here is your toast.',
+   {
+    duration: 5000,
+    position: 'top-right'
+  }
+  
+);
 
 function App() {
   const [count, setCount] = useState(0)
@@ -72,23 +81,36 @@ const handleChange = (e) => {
     });
   };
 
-async function editParticleName()
-  {
-    axios.post({API_NAMES_URL}, 
-      {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-      })
+const editParticleName = async function (e)
+{
+  e.preventDefault();
+  await axios.post(API_NAMES_URL, formData)
     .then(function (response) 
       {
+        console.log("Success!", response.data)
         console.log(response);
+        toast.success(`Successfully created! ${response.data}` ,
+          {
+            duration: 5000,
+            position: 'top-right'
+          }
+        );
+        setModalForEditNameIsOpen(false)
       })
     .catch(function (error) 
       {
-        console.log(error);
+        console.log(error, API_NAMES_URL, formData);
+        console.log("Error during data posting!", error.response?.data);
+        toast.error('This is an error!',
+          {
+           duration: 5000,
+           position: 'top-right'
+         });
+        
       })
     .finally(function () 
       {
+        // toast('Here is your toast.')
         // выполняется всегда
       });
   
@@ -105,7 +127,7 @@ async function editParticleName()
           React modal window here
           {modalContent}
         </ReactModal> */}
-        
+
         <SimpleModal
           isOpen={modalForEditNameIsOpen}    
           onClose={() => setModalForEditNameIsOpen(false)}
@@ -137,14 +159,31 @@ async function editParticleName()
           onChange={handleChange}
         />
         <br></br>
-        <button >Save name </button>
+        <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.'>see here</a>
+        <br></br>
+        <button 
+          onClick={() => setModalForEditNameIsOpen(false)}
+          >Cancel 
+        </button>
+
+        <button 
+          onClick = {editParticleName}
+        >Save name </button>
           </p>
         </SimpleModal>
       
       <h1>Стандартная модель элементарных частиц </h1>
-      Добавить селекторы для языка
+      <Toaster />
+      Добавить селекторы для языка:
+        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="relevance" checked /> EN | 
+        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="price" /> PT | 
+        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="distance" />  RU 
+        <br></br>
+        <br></br>
+      
       <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
       <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
+      <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
       <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
       <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
       <hr></hr>
@@ -155,7 +194,11 @@ async function editParticleName()
       </div>
       
       <div className="card">
-        <button onClick={() => setCount((count) => {count + 1; setModalIsOpen(!modalIsOpen)})}>
+        <button onClick={() => setCount((count) => {
+          count + 1; 
+          // setModalIsOpen(!modalIsOpen);
+          notify();
+          })}>
           count is {count}
         </button>
 
@@ -166,7 +209,7 @@ async function editParticleName()
           Add/edit particle name
         </button>
       </div>
-
+          Лептоны:
       <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br>
 
       {particles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}

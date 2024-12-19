@@ -16,8 +16,8 @@ export default function ParticleCard({particle})
         <div className="particleCard"
         style={{ backgroundColor: backgroundColor }}
         >
-            №{particle.number}: name {particle.name}, ({particle.name_ru}) 
-
+            №{particle.number}: baseid <b>{particle.baseid}</b>, name <b>{particle.name}</b>, ({particle.name_ru}/{particle.name_pt}) 
+             |<a href=''> edit</a>
         </div>
         </>
     )
