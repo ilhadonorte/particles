@@ -21,6 +21,7 @@ function App() {
   const [count, setCount] = useState(0)
   const [particles, setParticles] = useState([])
   const [leptons, setLeptons] = useState([])
+  const [quarks, setQuarks] = useState([])
   const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     baseid:"",
@@ -46,10 +47,11 @@ function App() {
       let leptons = particles.filter((particle) => particle.is_lepton)
       setLeptons(leptons)
       // const mesons = particles.filter((particle) => particle.is_meson )
-      // const quarks = particles.filter((particle) => particle.is_quark )
+      let quarks = particles.filter((particle) => particle.is_quark )
+      setQuarks(quarks)
       // console.log(bosons)
       // console.log(baryons)
-      console.log(leptons)
+      // console.log(leptons)
       // console.log(mesons)
       // console.log(quarks)
     } catch (err) {
@@ -183,6 +185,7 @@ const editParticleName = async function (e)
       
       <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
       <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
+      <a href="https://redketchup.io/color-picker" target='blank'> color picker</a> | 
       <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
       <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
       <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
@@ -209,8 +212,10 @@ const editParticleName = async function (e)
           Add/edit particle name
         </button>
       </div>
-          Лептоны:
+      Лептоны:
       <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br>
+      Кварки:
+      <ParticlesGroup particlesGroup={quarks}></ParticlesGroup> <br></br>
 
       {particles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
       
