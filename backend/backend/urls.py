@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-# from backend.api. import api
+from api.views import ParticleNameView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/name/<str:baseid>/', ParticleNameView.as_view(), name='api_names_str'),
     path('api/', include('api.urls')), 
 ]
 

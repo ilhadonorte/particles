@@ -4,9 +4,8 @@ from rest_framework import routers
 from .views import *
 
 router = routers.DefaultRouter()  
-router.register(r'name', ParticleNamesViewSet)
+router.register(r'names', ParticleNamesViewSet)
 
 urlpatterns = [
     path('particles/', ParticlesView.as_view(), name='api_particles'),
-    path('', include(router.urls)),
-]  
+    path('', include(router.urls))]  

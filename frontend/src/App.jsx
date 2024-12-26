@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import standartModel from '/standart_model.png'
+import standartModel from '/images/standart_model.png'
+import greenButton from '/images/strict_button.webp'
 import './App.css'
-import ParticleCard from './components/PacticleCard';
-import ParticlesGroup from './components/ParticlesGroup';
-import { API_PARTICLES_URL, API_NAMES_URL } from "./constants"; 
+import ParticleCard from './components/ParticleCard/PacticleCard';
+import ParticlesGroup from './components/ParticlesGroup/ParticlesGroup';
+import { API_PARTICLES_URL, API_NAME_URL } from "./constants"; 
 import ReactModal from 'react-modal';
-import { SimpleModal } from "./components/SimpleModal/SimpleModal";
+// import { SimpleModal } from "./components/SimpleModal/SimpleModal";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -23,6 +24,7 @@ function App() {
   const [leptons, setLeptons] = useState([])
   const [quarks, setQuarks] = useState([])
   const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("RU");
   const [formData, setFormData] = useState({
     baseid:"",
     name_ru:"",
@@ -32,6 +34,7 @@ function App() {
 
   useEffect(() => {
     fetchParticles();
+    // минин эту функцию расписал внутри самого хука почему
   }, []);  
 
   const fetchParticles = async () => {
@@ -60,40 +63,17 @@ function App() {
     console.timeEnd('fetchParticles');
   };  
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-  
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const modalContent = (
-    <div>
-      <h2>Заголовок модального окна</h2>
-      <p>Текст модального окна</p>
-      <button onClick={closeModal}>Закрыть</button>
-    </div>
-  );
-
-const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-const editParticleName = async function (e)
+  const editParticleName = async function (e)
 {
   e.preventDefault();
-  await axios.post(API_NAMES_URL, formData)
+  await axios.post(API_NAME_URL, formData)
     .then(function (response) 
       {
         console.log("Success!", response.data)
         console.log(response);
         toast.success(`Successfully created! ${response.data}` ,
           {
-            duration: 5000,
+            duration: 7000,
             position: 'top-right'
           }
         );
@@ -101,11 +81,11 @@ const editParticleName = async function (e)
       })
     .catch(function (error) 
       {
-        console.log(error, API_NAMES_URL, formData);
+        console.log(error, API_NAME_URL, formData);
         console.log("Error during data posting!", error.response?.data);
         toast.error('This is an error!',
           {
-           duration: 5000,
+           duration: 7000,
            position: 'top-right'
          });
         
@@ -118,26 +98,29 @@ const editParticleName = async function (e)
   
   }
 
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};  
 
-  return (
-    <>
-      <div>
-        {/* <ReactModal 
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-    >
-          React modal window here
-          {modalContent}
-        </ReactModal> */}
 
-        <SimpleModal
-          isOpen={modalForEditNameIsOpen}    
-          onClose={() => setModalForEditNameIsOpen(false)}
-        >
-          <h2>Add/edit particle name..</h2>
-          <p>
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+  
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
-        <input
+  const modalContent = (
+    <div>
+      <h2>Заголовок модального окна</h2>
+      <p>Текст модального окна</p>
+      <img src={greenButton} alt="bsdf" />
+      <h2>React modal window here. Add/edit particle name..</h2>
+      <input
           type="text"
           name="baseid"
           value={formData.baseid}
@@ -171,21 +154,58 @@ const editParticleName = async function (e)
         <button 
           onClick = {editParticleName}
         >Save name </button>
+      <button onClick={closeModal}>Закрыть</button>
+    </div>
+  );
+
+
+
+
+
+  const handleLanguageSelect = (e) => {
+    console.log("selected language:", selectedLanguage)
+    setSelectedLanguage(e.target.value)
+  }
+
+  return (
+    <>
+      <div>
+        <ReactModal 
+        isOpen={modalForEditNameIsOpen}
+        onRequestClose={closeModal}
+        >
+          {modalContent}
+        </ReactModal>
+
+        {/* <SimpleModal
+          isOpen={modalForEditNameIsOpen}    
+          onClose={() => setModalForEditNameIsOpen(false)}
+        >
+          <p>
+
+
           </p>
-        </SimpleModal>
+        </SimpleModal> */}
       
       <h1>Стандартная модель элементарных частиц </h1>
       <Toaster />
-      Добавить селекторы для языка:
-        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="relevance" checked /> EN | 
-        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="price" /> PT | 
-        <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="distance" />  RU 
-        <br></br>
-        <br></br>
+      <form>
+         <div id="group1">
+          Добавить селекторы для языка:
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="EN" onChange={handleLanguageSelect} checked /> EN | 
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="PT" onChange={handleLanguageSelect}/> PT | 
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="RU" onChange={handleLanguageSelect}/>  RU 
+          <br></br>
+          <br></br>
+        </div>
+      </form>
+
       
       <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
       <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
       <a href="https://redketchup.io/color-picker" target='blank'> color picker</a> | 
+      <a href="https://docs.djangoproject.com/en/5.1/" target='blank'> django</a> | 
+      <a href="https://reactcommunity.org/react-modal/" target='blank'> react-modal</a> | 
       <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
       <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
       <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
@@ -199,7 +219,7 @@ const editParticleName = async function (e)
       <div className="card">
         <button onClick={() => setCount((count) => {
           count + 1; 
-          // setModalIsOpen(!modalIsOpen);
+          setModalIsOpen(!modalIsOpen);
           notify();
           })}>
           count is {count}
@@ -211,7 +231,16 @@ const editParticleName = async function (e)
         >
           Add/edit particle name
         </button>
+
+        <button
+          className="modal-show-button"
+          onClick={() => setModalForEditNameIsOpen(true)}
+        >
+          Add/edit description
+        </button>
+
       </div>
+
       Лептоны:
       <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br>
       Кварки:

@@ -2,6 +2,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404, render
 
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response 
 from rest_framework import viewsets 
 from rest_framework.permissions import AllowAny
@@ -96,10 +97,18 @@ class ParticleNamesViewSet(viewsets.ModelViewSet):
     serializer_class = ParticleNameSerializer
     permission_classes = [AllowAny]    
 
-    # def retrieve(self, request, pk, baseid=None):
-    #     queryset = ParticleNamesModel.objects.all()
-    #     particle_names = get_object_or_404(queryset, baseid=baseid)
-    #     serializer = ParticleNameSerializer(particle_names)
-    #     return Response(serializer.data)
 
 
+class ParticleNameView(APIView):
+        
+    def get(self, request, *args, **kwargs):
+        print("вошли в get метод, редактировать будем имя ", kwargs['baseid'])
+        particle, created = ParticleNamesModel.objects.get_or_create(
+        baseid=kwargs['baseid'],
+        defaults={"baseid": kwargs['baseid']}
+        )
+        print("название частицы было создано:", created )
+        # particle = ParticleNamesModel.objects.get(baseid=kwargs['baseid'])
+        serializer = ParticleNameSerializer(particle)
+        # сделать возвращение 201 кода если создано и 
+        return Response(serializer.data)

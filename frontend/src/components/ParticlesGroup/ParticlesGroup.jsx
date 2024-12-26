@@ -1,4 +1,4 @@
-import ParticleCard from './PacticleCard';
+import ParticleCard from '../ParticleCard/PacticleCard';
 
 export default function ParticlesGroup({particlesGroup}){
     

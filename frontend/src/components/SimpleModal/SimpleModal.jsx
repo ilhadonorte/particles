@@ -15,14 +15,14 @@ export const SimpleModal = ({ isOpen, onClose, children }) => {
           <div className={`modal modal--${state}`}>
             <div className="modal-wrapper" onClick={onWrapperClick}>
               <div className="modal-content">
-                <button
+                {/* <button
                   className="modal-close-button"
                   onClick={() => onClose()}
                 >
                   <img className="modal-close-button" src={IconClose} alt="Vite logo" />
-                  {/* <IconClose /> */}
-                </button>
-                {children}
+                  <IconClose />
+                </button> */}
+                {/* {children} */}
               </div>
             </div>
           </div>
