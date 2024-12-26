@@ -99,6 +99,13 @@ class ParticleNamesViewSet(viewsets.ModelViewSet):
 
 
 
+class DescriptionViewSet(viewsets.ModelViewSet):
+    queryset = DescriptionsInternacionalsModel.objects.all()
+    serializer_class = DescriptionInternacionalSerializer
+    permission_classes = [AllowAny]  
+
+
+
 class ParticleNameView(APIView):
         
     def get(self, request, *args, **kwargs):

@@ -6,6 +6,7 @@ import ParticleCard from './components/ParticleCard/PacticleCard';
 import ParticlesGroup from './components/ParticlesGroup/ParticlesGroup';
 import { API_PARTICLES_URL, API_NAME_URL } from "./constants"; 
 import ReactModal from 'react-modal';
+import ModalForDescription from './components/ModalForDescription/ModalForDescription';
 // import { SimpleModal } from "./components/SimpleModal/SimpleModal";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
@@ -23,7 +24,9 @@ function App() {
   const [particles, setParticles] = useState([])
   const [leptons, setLeptons] = useState([])
   const [quarks, setQuarks] = useState([])
+
   const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
+  const [modalForDescriptionIsOpen, setModalForDescriptionIsOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("RU");
   const [formData, setFormData] = useState({
     baseid:"",
@@ -111,15 +114,15 @@ const handleChange = (e) => {
   };
   
   const closeModal = () => {
-    setModalIsOpen(false);
+    // setModalIsOpen(false);
+    setModalForEditNameIsOpen(false);
   };
 
-  const modalContent = (
+  const modalContentForName = (
     <div>
-      <h2>Заголовок модального окна</h2>
-      <p>Текст модального окна</p>
-      <img src={greenButton} alt="bsdf" />
       <h2>React modal window here. Add/edit particle name..</h2>
+      
+
       <input
           type="text"
           name="baseid"
@@ -128,6 +131,7 @@ const handleChange = (e) => {
           onChange={handleChange}
         /> 
         <br></br>
+
         <input
           type="text"
           name="name_ru"
@@ -136,6 +140,7 @@ const handleChange = (e) => {
           onChange={handleChange}
         />
         <br></br>
+
         <input
           type="text"
           name="name_pt"
@@ -143,9 +148,9 @@ const handleChange = (e) => {
           placeholder="Português name..."
           onChange={handleChange}
         />
+        | <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.'>see here</a>
         <br></br>
-        <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.'>see here</a>
-        <br></br>
+        <img src={greenButton} alt="bsdf" />
         <button 
           onClick={() => setModalForEditNameIsOpen(false)}
           >Cancel 
@@ -154,10 +159,8 @@ const handleChange = (e) => {
         <button 
           onClick = {editParticleName}
         >Save name </button>
-      <button onClick={closeModal}>Закрыть</button>
     </div>
   );
-
 
 
 
@@ -172,10 +175,13 @@ const handleChange = (e) => {
       <div>
         <ReactModal 
         isOpen={modalForEditNameIsOpen}
+        
         onRequestClose={closeModal}
         >
-          {modalContent}
+          {modalContentForName}
         </ReactModal>
+
+      <ModalForDescription isOpen={modalForDescriptionIsOpen}></ModalForDescription>
 
         {/* <SimpleModal
           isOpen={modalForEditNameIsOpen}    
@@ -219,7 +225,7 @@ const handleChange = (e) => {
       <div className="card">
         <button onClick={() => setCount((count) => {
           count + 1; 
-          setModalIsOpen(!modalIsOpen);
+          // setModalIsOpen(!modalIsOpen);
           notify();
           })}>
           count is {count}
@@ -234,7 +240,7 @@ const handleChange = (e) => {
 
         <button
           className="modal-show-button"
-          onClick={() => setModalForEditNameIsOpen(true)}
+          onClick={() => setModalForDescriptionIsOpen(true)}
         >
           Add/edit description
         </button>

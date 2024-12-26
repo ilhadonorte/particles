@@ -22,3 +22,10 @@ class ParticleNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParticleNamesModel
         fields = '__all__'
+
+
+class DescriptionInternacionalSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DescriptionsInternacionalsModel
+        fields = '__all__'

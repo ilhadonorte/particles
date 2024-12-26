@@ -5,6 +5,7 @@ from .views import *
 
 router = routers.DefaultRouter()  
 router.register(r'names', ParticleNamesViewSet)
+router.register(r'description', DescriptionViewSet)
 
 urlpatterns = [
     path('particles/', ParticlesView.as_view(), name='api_particles'),

@@ -12,7 +12,7 @@ class ParticleNamesModel(models.Model):
     
     class Meta:
         verbose_name = 'Name'
-        verbose_name_plural = 'Namess'
+        verbose_name_plural = 'Names'
         # ordering = ['-is_enabled']
         db_table = "particle_names"
         # db_table_comment = "Question answers"
