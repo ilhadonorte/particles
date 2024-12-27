@@ -105,6 +105,7 @@ export default function ModalForDescription({isOpen})
         
         <ReactModal 
         isOpen={isOpen}
+        parentSelector={() => document.querySelector('#root')}
         onRequestClose={closeModal}
         shouldCloseOnEsc={true}
         >

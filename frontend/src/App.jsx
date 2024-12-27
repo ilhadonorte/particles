@@ -120,9 +120,9 @@ const handleChange = (e) => {
 
   const modalContentForName = (
     <div>
-      <h2>React modal window here. Add/edit particle name..</h2>
-      
+      <h2>Add new particle name</h2>
 
+      <p>
       <input
           type="text"
           name="baseid"
@@ -148,9 +148,9 @@ const handleChange = (e) => {
           placeholder="Português name..."
           onChange={handleChange}
         />
-        | <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.'>see here</a>
+        | <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.' target='blank'>see here</a>
         <br></br>
-        <img src={greenButton} alt="bsdf" />
+        
         <button 
           onClick={() => setModalForEditNameIsOpen(false)}
           >Cancel 
@@ -159,6 +159,8 @@ const handleChange = (e) => {
         <button 
           onClick = {editParticleName}
         >Save name </button>
+
+      </p>
     </div>
   );
 
@@ -175,7 +177,7 @@ const handleChange = (e) => {
       <div>
         <ReactModal 
         isOpen={modalForEditNameIsOpen}
-        
+        parentSelector={() => document.querySelector('#root')}
         onRequestClose={closeModal}
         >
           {modalContentForName}
@@ -200,7 +202,7 @@ const handleChange = (e) => {
           Добавить селекторы для языка:
           <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="EN" onChange={handleLanguageSelect} checked /> EN | 
           <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="PT" onChange={handleLanguageSelect}/> PT | 
-          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="RU" onChange={handleLanguageSelect}/>  RU 
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="RU" onChange={handleLanguageSelect}/>  RU <img src={greenButton} alt="bsdf" />
           <br></br>
           <br></br>
         </div>
