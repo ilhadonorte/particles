@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 from django.shortcuts import get_object_or_404, render
 
 from rest_framework.views import APIView
@@ -30,7 +31,8 @@ class ParticleCard():
             is_baryon,
             is_lepton,
             is_meson,
-            is_quark
+            is_quark,
+            decays_counter = 0
             ):
         
         self.number = number  
@@ -44,7 +46,7 @@ class ParticleCard():
         self.is_lepton = is_lepton
         self.is_meson = is_meson
         self.is_quark = is_quark
-
+        self.decays_counter = decays_counter if decays_counter is not None else 0
 
 
 
@@ -53,8 +55,22 @@ class ParticlesView(APIView):
 
     def get(self,request):
         
-        start = datetime.now()
+        start_time = time.time()
         particle_cards = []
+        all_particles = api.get_particles()
+        all_objects = api.get_all()
+        all_decays = []
+        print("Всего объектов было: ", len(list(all_objects)))
+        print("из них частиц:", len(list(all_particles)))
+        
+        for item in api.get_all():
+            # один раз сразу находим только распады, так как их 7253 из 20087 объектов
+            # print(item.baseid)
+            if hasattr(item, "subdecay_level"):
+            #     print(item)
+                all_decays.append(item)
+        print("из них распадов:", len(all_decays))
+        
         for count, item in enumerate(api.get_particles()):
             # print(count, item.baseid, item.__dict__)
             particle = pdg.data.PdgData(api, item.pdgid)
@@ -70,6 +86,15 @@ class ParticlesView(APIView):
             except ParticleNamesModel.DoesNotExist:
                 name_pt = "particle portugues name not found in database"
             
+            decays_counter = 0
+            for decay in all_decays:
+                if particle.baseid in decay.baseid:
+                    # print("есть такой распад:", item.baseid, item.subdecay_level, item.get_parent_pdgid()) 
+                    # print(item.decay_products)
+                    decays_counter += 1
+            
+            print("particle ", particle.baseid, "has", decays_counter, "decays")
+
             particle_card = ParticleCard(
                 number = count,
                 baseid = item.baseid,
@@ -81,13 +106,15 @@ class ParticlesView(APIView):
                 is_baryon = particle_details.is_baryon,
                 is_lepton = particle_details.is_lepton,
                 is_meson = particle_details.is_meson,
-                is_quark = particle_details.is_quark
+                is_quark = particle_details.is_quark,
+                decays_counter = decays_counter
             )
             # print(particle_card.number)
             particle_cards.append(particle_card)
-        ended = datetime.now()
+        
         serializer = ParticleCardSerializer(particle_cards, many=True)
-        print("Запрос данных занял: ", (ended - start)/1000, "mc")
+        end_time = time.time()
+        print("Запрос данных занял: ", end_time - start_time, " c")
         return Response(serializer.data)    
     
 

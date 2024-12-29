@@ -113,6 +113,11 @@ export default function ParticleCard({particle})
         style={{ backgroundColor: backgroundColor }}
         >
             №{particle.number}: baseid <b>{particle.baseid}</b>, name <b>{particle.name}</b>, ({particle.name_ru}/{particle.name_pt}) 
+            [
+                {particle.decays_counter > 0 && <b>{particle.decays_counter}</b>} 
+                    
+                
+            ]
              |<a href={urlForEditName} target='blank' onClick={() =>handleEditName(particle)}> edit </a> 
              |<a href={urlForAllDetails} target='blank'> more</a>
              <button onClick={() => handleEditName(particle)}>edit name</button>

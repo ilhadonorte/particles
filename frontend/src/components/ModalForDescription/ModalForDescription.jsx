@@ -7,6 +7,7 @@ export default function ModalForDescription({isOpen})
 {
     console.log("isOpen=", isOpen, typeof(isOpen))
     const [formData, setFormData] = useState({
+        label_for: "",
         description_en: "",
         description_ru: "",
         description_pt: ""
@@ -66,7 +67,14 @@ export default function ModalForDescription({isOpen})
         <div>
           <h2>add/edit description | <a href={API_DESCRIPTION_URL} target='blank'> view all descriptions</a></h2>
           <br></br>
-
+          <input
+                type="text"
+                name="label_for"
+                value={formData.label_for}
+                placeholder="Description..."
+                onChange={handleChange}
+              /> 
+              <br></br>
           <input
                 type="text"
                 name="description_en"

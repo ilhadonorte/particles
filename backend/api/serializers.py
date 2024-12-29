@@ -15,6 +15,7 @@ class ParticleCardSerializer(serializers.Serializer):
     is_lepton =serializers.BooleanField()
     is_meson = serializers.BooleanField()
     is_quark = serializers.BooleanField()
+    decays_counter = serializers.IntegerField()
 
 
 class ParticleNameSerializer(serializers.ModelSerializer):

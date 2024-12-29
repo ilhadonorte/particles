@@ -24,6 +24,11 @@ class ParticleNamesModel(models.Model):
 
 class DescriptionsInternacionalsModel(models.Model):
     # может добавить ссылку на вики на каждом языке
+    #сделать лэйбл уникальным
+    label_for = models.TextField(max_length=100, default="None")
+    wiki_url_en = models.URLField(max_length=256, default="None")
+    wiki_url_ru = models.URLField(max_length=256, default="None")
+    wiki_url_pt = models.URLField(max_length=256, default="None")
     description_en = models.TextField(default="Description in English is not set yet")
     description_ru = models.TextField(default="Описание на русском пока не задано")
     description_pt = models.TextField(default="Ainda não há descrição em português")
