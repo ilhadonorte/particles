@@ -8,6 +8,7 @@ class ParticleCardSerializer(serializers.Serializer):
     baseid = serializers.CharField(max_length=100)
     pdgid = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
+    name_en = serializers.CharField(max_length=100)
     name_ru = serializers.CharField(max_length=100)
     name_pt = serializers.CharField(max_length=100)
     is_boson = serializers.BooleanField()
@@ -16,6 +17,7 @@ class ParticleCardSerializer(serializers.Serializer):
     is_meson = serializers.BooleanField()
     is_quark = serializers.BooleanField()
     decays_counter = serializers.IntegerField()
+    burns_counter = serializers.IntegerField()
 
 
 class ParticleNameSerializer(serializers.ModelSerializer):

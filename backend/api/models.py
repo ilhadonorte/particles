@@ -6,10 +6,20 @@ from django.contrib.auth.models import AbstractUser
 class ParticleNamesModel(models.Model):
     # может добавить ссылку на вики на каждом языке
     baseid = models.CharField(max_length=50, unique=True)
-    name_en = models.CharField(max_length=100, default="Dont have english name yet")
-    name_ru = models.CharField(max_length=100, default="Не задано пока название на русском")
-    name_pt = models.CharField(max_length=100, default="Ainda sem nome em português")
+    name_en = models.CharField(max_length=100)
+    name_ru = models.CharField(max_length=100)
+    name_pt = models.CharField(max_length=100)
     
+    def save(self):
+        if not self.name_en:
+            self.name_en = self.baseid
+        if not self.name_ru:
+            self.name_ru = self.baseid
+        if not self.name_pt:
+            self.name_pt = self.baseid
+        print("возможно, один из параметров не задан, задаем дефолтное значение")
+        super().save()
+
     class Meta:
         verbose_name = 'Name'
         verbose_name_plural = 'Names'

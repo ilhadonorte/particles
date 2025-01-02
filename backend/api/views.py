@@ -1,8 +1,11 @@
 from datetime import datetime
 import time
 from django.shortcuts import get_object_or_404, render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework import generics
 from rest_framework.response import Response 
 from rest_framework import viewsets 
@@ -25,6 +28,7 @@ class ParticleCard():
             baseid,
             pdgid, 
             name,
+            name_en,
             name_ru,
             name_pt,
             is_boson,
@@ -32,13 +36,15 @@ class ParticleCard():
             is_lepton,
             is_meson,
             is_quark,
-            decays_counter = 0
+            decays_counter = 0,
+            burns_counter = 0
             ):
         
         self.number = number  
         self.baseid = baseid
         self.pdgid = pdgid
         self.name = name
+        self.name_en = name_en
         self.name_ru = name_ru
         self.name_pt = name_pt
         self.is_boson = is_boson
@@ -47,59 +53,74 @@ class ParticleCard():
         self.is_meson = is_meson
         self.is_quark = is_quark
         self.decays_counter = decays_counter if decays_counter is not None else 0
+        self.burns_counter = burns_counter if burns_counter is not None else 0
+
+
+# all_particles = api.get_particles()
+# all_objects = api.get_all()
+all_decays = []
+# print("Всего объектов было: ", len(list(all_objects)))
+# print("из них частиц:", len(list(all_particles)))
+
+for item in api.get_all():
+    # один раз сразу находим только распады, так как их 7253 из 20087 объектов убрать из гета в начало файла чтобы не выполнялось при каждом обращении а эндпоинту. Надо "образуется при распаде х" сделать, чтобы понятно было откуда они берутся.
+    # print(item.baseid) сделать сравнение масс и жизней с другими по выбору, электрн, протон..
+    if hasattr(item, "subdecay_level"):
+    #     print(item)
+        all_decays.append(item)
+# print("из них распадов:", len(all_decays))
 
 
 
 class ParticlesView(APIView):
-
+    @method_decorator(cache_page(60*1))
 
     def get(self,request):
         
         start_time = time.time()
         particle_cards = []
-        all_particles = api.get_particles()
-        all_objects = api.get_all()
-        all_decays = []
-        print("Всего объектов было: ", len(list(all_objects)))
-        print("из них частиц:", len(list(all_particles)))
-        
-        for item in api.get_all():
-            # один раз сразу находим только распады, так как их 7253 из 20087 объектов
-            # print(item.baseid)
-            if hasattr(item, "subdecay_level"):
-            #     print(item)
-                all_decays.append(item)
-        print("из них распадов:", len(all_decays))
         
         for count, item in enumerate(api.get_particles()):
             # print(count, item.baseid, item.__dict__)
             particle = pdg.data.PdgData(api, item.pdgid)
             particle_details = pdg.particle.PdgParticle(api, item.pdgid)
+            # print(particle_details.quantum_J)
 
             try:
                 name_ru = ParticleNamesModel.objects.get(baseid=item.baseid).name_ru
             except ParticleNamesModel.DoesNotExist:
-                name_ru = "particle russian name not found in database"
+                name_ru = item.baseid
             
             try:
                 name_pt = ParticleNamesModel.objects.get(baseid=item.baseid).name_pt
             except ParticleNamesModel.DoesNotExist:
-                name_pt = "particle portugues name not found in database"
+                name_pt = item.baseid
+            
+            try:
+                name_en = ParticleNamesModel.objects.get(baseid=item.baseid).name_en
+            except ParticleNamesModel.DoesNotExist:
+                name_en = item.baseid
             
             decays_counter = 0
+            burns_counter = 0
             for decay in all_decays:
                 if particle.baseid in decay.baseid:
                     # print("есть такой распад:", item.baseid, item.subdecay_level, item.get_parent_pdgid()) 
                     # print(item.decay_products)
                     decays_counter += 1
+                if particle.description in decay.description.split(">")[1]:
+                    # print("найдено рождение частицы", particle.description, "в распаде: ", decay.baseid, " вот так:", decay.description)
+                    burns_counter += 1
+            # print("всего частица рождается в распадах других, раз: ", burns_counter) 
             
-            print("particle ", particle.baseid, "has", decays_counter, "decays")
+            # print("particle ", particle.baseid, "has", decays_counter, "decays")
 
             particle_card = ParticleCard(
                 number = count,
                 baseid = item.baseid,
                 pdgid = item.pdgid,
                 name = particle.description,
+                name_en = name_en,
                 name_ru = name_ru,
                 name_pt = name_pt,
                 is_boson = particle_details.is_boson,
@@ -107,7 +128,8 @@ class ParticlesView(APIView):
                 is_lepton = particle_details.is_lepton,
                 is_meson = particle_details.is_meson,
                 is_quark = particle_details.is_quark,
-                decays_counter = decays_counter
+                decays_counter = decays_counter,
+                burns_counter = burns_counter
             )
             # print(particle_card.number)
             particle_cards.append(particle_card)
@@ -146,3 +168,24 @@ class ParticleNameView(APIView):
         serializer = ParticleNameSerializer(particle)
         # сделать возвращение 201 кода если создано и 
         return Response(serializer.data)
+    
+    def patch(self, request, *args, **kwargs):
+        print("вошли в patch метод, редактировать будем имя:", kwargs['baseid'])
+        print("данные из запроса для апдейта: \n",request.data)
+        particle = ParticleNamesModel.objects.get(baseid = kwargs["baseid"])
+        for key in request.data :
+            if key in particle.__dict__:
+                # print("found keys:", request.data[key], particle.__dict__[key])
+                if request.data[key] != particle.__dict__[key]:
+                    print("field", key, "was changed:", particle.__dict__[key], "=>", request.data[key])
+                    particle.__dict__[key] = request.data[key]
+                    
+            else:
+                error_text = "прилетел непонятный key:" + key + " со значением: " + request.data[key]
+                print(error_text)
+                return Response(error_text, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            
+        particle.save()
+        serializer = ParticleNameSerializer(particle)
+        print("название частицы было успешно отредактировано:\n",serializer.data )
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

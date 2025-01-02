@@ -30,6 +30,7 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState("RU");
   const [formData, setFormData] = useState({
     baseid:"",
+    name_en:"",
     name_ru:"",
     name_pt:""
   })
@@ -41,7 +42,7 @@ function App() {
   }, []);  
 
   const fetchParticles = async () => {
-    console.time('fetchParticles');
+    // console.time('fetchParticles');
 
     try {
       const response = await fetch(API_PARTICLES_URL);
@@ -246,7 +247,8 @@ const handleChange = (e) => {
         >
           Add/edit description
         </button>
-
+        сравнивать с массой:
+        <select>ddd</select>
       </div>
 
       Лептоны:
