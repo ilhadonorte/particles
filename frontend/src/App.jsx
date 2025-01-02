@@ -1,15 +1,27 @@
 import { useState, useEffect } from 'react'
-import standartModel from '/images/standart_model.png'
-import greenButton from '/images/strict_button.webp'
 import './App.css'
 import ParticleCard from './components/ParticleCard/PacticleCard';
 import ParticlesGroup from './components/ParticlesGroup/ParticlesGroup';
-import { API_PARTICLES_URL, API_NAME_URL } from "./constants"; 
+import { API_NAME_URL } from "./constants"; 
 import ReactModal from 'react-modal';
 import ModalForDescription from './components/ModalForDescription/ModalForDescription';
 // import { SimpleModal } from "./components/SimpleModal/SimpleModal";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
+
+import Navbar from './components/Navbar/Navbar';
+
+import AboutMe from './pages/AboutMe';
+import ParticleOperations from './pages/ParticleOperations';
+import ParticleDetailsComparator from './pages/ParticleDetailsComparator'
+import HomePage from './pages/Home';
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+
 
 const notify = () => toast.success('Here is your toast.',
    {
@@ -21,7 +33,7 @@ const notify = () => toast.success('Here is your toast.',
 
 function App() {
   const [count, setCount] = useState(0)
-  const [particles, setParticles] = useState([])
+ 
   const [leptons, setLeptons] = useState([])
   const [quarks, setQuarks] = useState([])
 
@@ -36,36 +48,8 @@ function App() {
   })
   // const axios = require('axios');
 
-  useEffect(() => {
-    fetchParticles();
-    // минин эту функцию расписал внутри самого хука почему
-  }, []);  
 
-  const fetchParticles = async () => {
-    // console.time('fetchParticles');
 
-    try {
-      const response = await fetch(API_PARTICLES_URL);
-      const particles = await response.json();
-      // console.log(particles)
-      setParticles(particles);
-      // const bosons = particles.filter((particle) => particle.is_boson )
-      // const baryons = particles.filter((particle) => particle.is_baryon )
-      let leptons = particles.filter((particle) => particle.is_lepton)
-      setLeptons(leptons)
-      // const mesons = particles.filter((particle) => particle.is_meson )
-      let quarks = particles.filter((particle) => particle.is_quark )
-      setQuarks(quarks)
-      // console.log(bosons)
-      // console.log(baryons)
-      // console.log(leptons)
-      // console.log(mesons)
-      // console.log(quarks)
-    } catch (err) {
-      console.log(err);
-    }
-    console.timeEnd('fetchParticles');
-  };  
 
   const editParticleName = async function (e)
 {
@@ -175,6 +159,29 @@ const handleChange = (e) => {
 
   return (
     <>
+    <Router>
+      <Navbar></Navbar>
+      <Routes>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/particle-operations" element={<ParticleOperations />}></Route>
+        <Route path="/particle-detail" element={<ParticleDetailsComparator />}></Route>
+        <Route path="/about" element={<AboutMe />}></Route>
+      </Routes>
+    </Router>
+
+    <form>
+         <div id="group1">
+          Добавить селекторы для языка:
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="EN" onChange={handleLanguageSelect} checked /> EN | 
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="PT" onChange={handleLanguageSelect}/> PT | 
+          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="RU" onChange={handleLanguageSelect}/>  RU 
+          сравнивать с массой:
+          <select>ddd</select>
+          <br></br>
+          <br></br>
+        </div>
+      </form>
+
       <div>
         <ReactModal 
         isOpen={modalForEditNameIsOpen}
@@ -196,33 +203,12 @@ const handleChange = (e) => {
           </p>
         </SimpleModal> */}
       
-      <h1>Стандартная модель элементарных частиц </h1>
+     
       <Toaster />
-      <form>
-         <div id="group1">
-          Добавить селекторы для языка:
-          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="EN" onChange={handleLanguageSelect} checked /> EN | 
-          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="PT" onChange={handleLanguageSelect}/> PT | 
-          <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="RU" onChange={handleLanguageSelect}/>  RU <img src={greenButton} alt="bsdf" />
-          <br></br>
-          <br></br>
-        </div>
-      </form>
+
 
       
-      <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
-      <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
-      <a href="https://redketchup.io/color-picker" target='blank'> color picker</a> | 
-      <a href="https://docs.djangoproject.com/en/5.1/" target='blank'> django</a> | 
-      <a href="https://reactcommunity.org/react-modal/" target='blank'> react-modal</a> | 
-      <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
-      <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
-      <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
-      <hr></hr>
 
-        <a href="https://pdg.lbl.gov/2024/api/index.html" target="_blank">
-          <img src={standartModel} className="logo" alt="Vite logo" />
-        </a>
       </div>
       
       <div className="card">
@@ -247,16 +233,15 @@ const handleChange = (e) => {
         >
           Add/edit description
         </button>
-        сравнивать с массой:
-        <select>ddd</select>
+
       </div>
 
       Лептоны:
-      <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br>
+      {/* <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br> */}
       Кварки:
-      <ParticlesGroup particlesGroup={quarks}></ParticlesGroup> <br></br>
+      {/* <ParticlesGroup particlesGroup={quarks}></ParticlesGroup> <br></br> */}
 
-      {particles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
+      
       
     </>
   )

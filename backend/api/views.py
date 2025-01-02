@@ -73,7 +73,7 @@ for item in api.get_all():
 
 
 class ParticlesView(APIView):
-    @method_decorator(cache_page(60*1))
+    @method_decorator(cache_page(60*61))
 
     def get(self,request):
         
