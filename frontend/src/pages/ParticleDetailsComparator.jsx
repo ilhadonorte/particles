@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { API_PARTICLES_URL } from "../constants"; 
-
+import { useParams } from "react-router";
 
 function ParticleDetailComparator() {
   const [particles, setParticles] = useState([])
@@ -33,6 +33,8 @@ function ParticleDetailComparator() {
     console.log("Сравнивать будем с частицей:", e.target.value)
   }
 
+  let params = useParams()
+  console.log(params.baseid)
 
   return (
     <div>

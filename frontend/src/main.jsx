@@ -26,6 +26,7 @@ createRoot(document.getElementById('root')).render(
         <Route index path="/" element={<HomePage />}></Route>
         <Route path="/particle-operations" element={<ParticleOperations />}></Route>
         <Route path="/particle-detail" element={<ParticleDetailsComparator />}></Route>
+        <Route path="/particle-details/:baseid" element={<ParticleDetailsComparator />}></Route>
         <Route path="/about" element={<AboutMe />}></Route>
         <Route path="/mesons" element={<MesonsPage />}></Route>
         <Route path="/barions" element={<BarionsPage />}></Route>

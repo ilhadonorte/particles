@@ -1,8 +1,15 @@
 .particleCard{
     border-radius: 5px;
-    border: 2px solid ; 
+    border: 3px solid ; 
     color: #1a1a1a;
     background-color: #e7df8f5c;
     /* padding: 5px; */
-    margin: 2px;
+    margin: 5px;
+    /* width: 33.333%; */
 }
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 100px);
+  }

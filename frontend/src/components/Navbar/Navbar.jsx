@@ -1,19 +1,19 @@
 import React from 'react';
 import './Navbar.css';
-import {Link} from "react-router";
+import {NavLink} from "react-router";
 
 function Navbar() {
   return (
-    <div className='navigation-menu'>
+    <nav className='navigation-menu'>
         <ol>
-            <li><Link to={"/"}>Home</Link></li>
-            <li><Link to={"/mesons"}>Mesons</Link></li>
-            <li><Link to={"/barions"}>Barions</Link></li>
-            <li><Link to={"/particle-operations"}>Particle operations</Link></li>
-            <li><Link to={"/particle-detail"}>Particle details</Link></li>
-            <li><Link to={"/about"}>About</Link></li>
+            <li><NavLink to={"/"}>Home</NavLink></li>
+            <li><NavLink to={"/mesons"}>Mesons</NavLink></li>
+            <li><NavLink to={"/barions"}>Barions</NavLink></li>
+            <li><NavLink to={"/particle-operations"}>Particle operations</NavLink></li>
+            <li><NavLink to={"/particle-detail"}>Particle details</NavLink></li>
+            <li><NavLink to={"/about"}>About</NavLink></li>
         </ol>
-    </div>
+    </nav>
 
   )
 }

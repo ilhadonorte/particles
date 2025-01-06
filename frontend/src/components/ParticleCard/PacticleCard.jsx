@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './ParticleCard.css' 
 import { API_PDG_REST_URL, API_NAME_URL } from "../../constants"; 
 import ReactModal from 'react-modal';
+import {Link} from "react-router";
 
 import axios from 'axios';
 
@@ -160,9 +161,9 @@ export default function ParticleCard({particle})
             </ReactModal>
 
         <div className="particleCard"
-        style={{ backgroundColor: backgroundColor }}
+        style={{ borderColor: backgroundColor }}
         >
-            №{particle.number}: baseid <b>{particle.baseid}</b>, name <b>{particle.name}</b>, ({particle.name_ru}/{particle.name_pt}) 
+            №{particle.number}: baseid <b>{particle.baseid}</b>, name <b>{particle.name}</b>, ({particle.name_ru}/{particle.name_pt}) <br></br>
             [
                 {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : 0}/ 
                 {particle.decays_counter > 0 ? <b>{particle.decays_counter}</b> : 0} 
@@ -173,7 +174,8 @@ export default function ParticleCard({particle})
              target='blank' 
              onClick={(e) =>handleEditName(particle, e)}> edit </a> 
              |<a href={urlForAllDetails} target='blank'> more</a>
-             <button onClick={() => handleEditName(particle)}>edit name</button>
+             |<Link to={"/particle-details/"+particle.baseid}>details</Link>
+             {/* <button onClick={() => handleEditName(particle, e)}>edit name</button> */}
         </div>
         </>
     )

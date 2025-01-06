@@ -146,6 +146,12 @@ function ParticleOperations() {
     // минин эту функцию расписал внутри самого хука почему
   }, []);  
 
+const styles = {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gridTemplateRows: "repeat(3, 100px)"
+}
+
   return (
     <div>
 
@@ -191,9 +197,19 @@ function ParticleOperations() {
           Add/edit description
         </button>
 
-
-
+      <label>отфильтровать только</label>
+        <select name="compararComParticle">
+          <option>бозоны</option>
+          <option>мезоны</option>
+          <option>барионы</option>
+          <option>кварки</option>
+          <option>лепоны</option>
+          {/* {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.name_ru}</option>)} */}
+        </select>
+      <div style={styles}>
       {particles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
+      </div>  
+      
     </div>
 
 

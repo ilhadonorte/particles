@@ -21,9 +21,9 @@ const handleLanguageSelect = (e) => {
         <form>
               <div id="group1">
               Добавить селекторы для языка: 
-              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="en" onChange={handleLanguageSelect} /> EN | 
-              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="pt" onChange={handleLanguageSelect}/> PT | 
-              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="ru" onChange={handleLanguageSelect}/>  RU 
+              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="en" onClick={handleLanguageSelect} /> EN | 
+              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="pt" onClick={handleLanguageSelect}/> PT | 
+              <input type="radio" className="form-check-input" name="radio_relevance_price_distance" value="ru" onClick={handleLanguageSelect}/>  RU 
               
               <br></br>
             </div>
