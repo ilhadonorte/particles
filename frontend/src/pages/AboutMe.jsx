@@ -5,6 +5,7 @@
     var portugues_started = new Date("2010-11-25")
     var odu_dropped = new Date("2012-10-18")
     var beasil_arrival = new Date("2021-3-11")
+    var war_started = new Date("2022-02-24")
     var florao_moved = new Date("2021-9-2")
     var jf_trab = new Date("2024-01-25")
     var jaguapita_moved = new Date("2024-08-22")
@@ -16,6 +17,7 @@
     var p_s = Math.ceil((today - portugues_started) / (1000 * 3600 * 24));
     var o_d = Math.ceil((today - odu_dropped) / (1000 * 3600 * 24));
     var b_a = Math.ceil((today - beasil_arrival) / (1000 * 3600 * 24));
+    var w_s = Math.ceil((today - war_started) / (1000 * 3600 * 24));
     var f_m = Math.ceil((today - florao_moved) / (1000 * 3600 * 24));
     var j_t = Math.ceil((today - jf_trab) / (1000 * 3600 * 24));
     var j_m = Math.ceil((today - jaguapita_moved) / (1000 * 3600 * 24));
@@ -36,6 +38,7 @@ function AboutMe() {
           Португальский учить начал: {p_s} дней назад <br></br>
           Бросил ОДУ: {o_d} дней назад<br></br>
           В Бразилию уехал: {b_a} дней назад<br></br>
+          Война началась: {w_s} дней назад<br></br>
           Вынужденно живу в парана: {f_m} дней<br></br>
           В жагвафранге мучаюсь уже: {j_t} дней<br></br>
           Перебрался в Jaguapitã: {j_m} дней назад<br></br>

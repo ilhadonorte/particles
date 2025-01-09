@@ -37,7 +37,9 @@ class ParticleCard():
             is_meson,
             is_quark,
             decays_counter = 0,
-            burns_counter = 0
+            burns_counter = 0,
+            charged_states_counter = 0,
+            # mass = 0
             ):
         
         self.number = number  
@@ -54,6 +56,8 @@ class ParticleCard():
         self.is_quark = is_quark
         self.decays_counter = decays_counter if decays_counter is not None else 0
         self.burns_counter = burns_counter if burns_counter is not None else 0
+        self.charged_states_counter = charged_states_counter,
+        # self.mass = mass if mass is not None else 0
 
 
 # all_particles = api.get_particles()
@@ -82,10 +86,16 @@ class ParticlesView(APIView):
         
         for count, item in enumerate(api.get_particles()):
             # print(count, item.baseid, item.__dict__)
+            
             particle = pdg.data.PdgData(api, item.pdgid)
+            
+            
+            charged_states_counter = len(item)
             particle_details = pdg.particle.PdgParticle(api, item.pdgid)
             # print(particle_details.quantum_J)
-
+            # tmp = api.get(particle.pdgid)
+            # if tmp.has_mass_entry:
+            # mass = 1.1
             try:
                 name_ru = ParticleNamesModel.objects.get(baseid=item.baseid).name_ru
             except ParticleNamesModel.DoesNotExist:
@@ -129,7 +139,9 @@ class ParticlesView(APIView):
                 is_meson = particle_details.is_meson,
                 is_quark = particle_details.is_quark,
                 decays_counter = decays_counter,
-                burns_counter = burns_counter
+                burns_counter = burns_counter,
+                charged_states_counter = charged_states_counter,
+                # mass=1
             )
             # print(particle_card.number)
             particle_cards.append(particle_card)

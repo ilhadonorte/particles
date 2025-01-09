@@ -15,9 +15,10 @@ ap = 0
 for particle in all_particles:
     items = api.get(particle.pdgid)
     ap += 1
-    print(len(items))
+    print("у частицы", particle, "в базе есть заряженных состояний: ", len(items))
     for item in items:
-       print(item)
+       if item.has_mass_entry:
+        print(item.mass)
        tp += 1
     # if hasattr(particle, 'mass'):
 print(ap, tp)

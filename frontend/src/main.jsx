@@ -15,7 +15,7 @@ import ParticleDetailsComparator from './pages/ParticleDetailsComparator'
 import HomePage from './pages/Home';
 import MesonsPage from './pages/Mesons.jsx';
 import BarionsPage from './pages/Barions.jsx';
-
+import HowToUsePage from './pages/HowToUse.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -30,6 +30,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/about" element={<AboutMe />}></Route>
         <Route path="/mesons" element={<MesonsPage />}></Route>
         <Route path="/barions" element={<BarionsPage />}></Route>
+        <Route path="/explaine" element={<HowToUsePage />}></Route>
       </Routes>
 
       

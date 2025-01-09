@@ -146,12 +146,13 @@ function ParticleOperations() {
     // минин эту функцию расписал внутри самого хука почему
   }, []);  
 
-const styles = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gridTemplateRows: "repeat(3, 100px)"
-}
+  const styles = {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    // gridTemplateRows: "repeat(3, 100px)"
+  }
 
+  console.log("found language for particle operations page:", localStorage.getItem("selectedLanguage") || "Language not was selected yet")
   return (
     <div>
 

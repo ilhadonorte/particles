@@ -18,7 +18,8 @@ class ParticleCardSerializer(serializers.Serializer):
     is_quark = serializers.BooleanField()
     decays_counter = serializers.IntegerField()
     burns_counter = serializers.IntegerField()
-
+    charged_states_counter = serializers.IntegerField()
+    # mass = serializers.FloatField()
 
 class ParticleNameSerializer(serializers.ModelSerializer):
 

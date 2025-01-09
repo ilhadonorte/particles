@@ -9,11 +9,13 @@ function HomePage() {
   //   }, []);
 
 const handleLanguageSelect = (e) => {
-    console.log("selected language:", selectedLanguage)
-    localStorage.setItem('selectedLanguage', selectedLanguage);
-    setSelectedLanguage(e.target.value)
+  setSelectedLanguage(e.target.value)
+  localStorage.setItem('selectedLanguage', selectedLanguage);
+  console.log("selected language now is:", selectedLanguage)
   }
 
+  // localStorage.getItem("selectedLanguage") || "No Title";
+  console.log("found language for homepag:", localStorage.getItem("selectedLanguage") || "Language not was selected yet")
   return (
     <div>
         <h1>Стандартная модель элементарных частиц </h1>
@@ -38,6 +40,7 @@ const handleLanguageSelect = (e) => {
         </a>
 
       <hr></hr>
+      <p class="blink">Внимание. Здесь сделать страницу описания: первая характеристика спин от неё начинают рассыпаться все остальные</p>
     </div>
 
   )

@@ -36,6 +36,7 @@ function ParticleDetailComparator() {
   let params = useParams()
   console.log(params.baseid)
 
+  console.log("found language for particle details page:", localStorage.getItem("selectedLanguage") || "Language not was selected yet")
   return (
     <div>
       <h1>Particle details e particle comparator page</h1>

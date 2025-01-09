@@ -7,6 +7,7 @@ function Navbar() {
     <nav className='navigation-menu'>
         <ol>
             <li><NavLink to={"/"}>Home</NavLink></li>
+            <li><NavLink to={"/explaine"}>How to use</NavLink></li>
             <li><NavLink to={"/mesons"}>Mesons</NavLink></li>
             <li><NavLink to={"/barions"}>Barions</NavLink></li>
             <li><NavLink to={"/particle-operations"}>Particle operations</NavLink></li>
