@@ -163,19 +163,25 @@ export default function ParticleCard({particle})
         <div className="particleCard"
         style={{ borderColor: backgroundColor }}
         >
-            №{particle.number} baseid <b>{particle.baseid}</b>, name <b>{particle.name}</b>, ({particle.name_ru}/{particle.name_pt}) <br></br>
-            
-                burn: {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : 0} | 
-                decays: {particle.decays_counter > 0 ? <b>{particle.decays_counter}</b> : 0} | 
-                charded states: {particle.charged_states_counter > 1 ? <b>{particle.charged_states_counter}</b> : ""} <br></br>
-                    
-                
-            
+            ({particle.name_ru}/{particle.name_pt}) <br></br>
+              
+              <span className="left">№{particle.number}</span>
+              <span className="right">burns: {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : 0}</span><br></br>
+
+              <span className="left">baseid <b>{particle.baseid}</b></span>
+              <span className="right">charded states: {particle.charged_states_counter > 1 ? <b>{particle.charged_states_counter}</b> : particle.charged_states_counter}</span>
+              <br></br>
+
+              <span className="left">name <b>{particle.name}</b></span>
+
             <a href={urlForEditName} 
              target='blank' 
              onClick={(e) =>handleEditName(particle, e)}> edit </a> 
              | <a href={urlForAllDetails} target='blank'> more </a>
              | <Link to={"/particle-details/"+particle.baseid}>details</Link>
+              
+             <span className="right">decays: {particle.decays_counter > 0 ? <b>{particle.decays_counter}</b> : 0}</span><br></br>
+                    
              {/* <button onClick={() => handleEditName(particle, e)}>edit name</button> */}
         </div>
         </>

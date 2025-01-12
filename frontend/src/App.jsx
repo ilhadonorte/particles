@@ -11,26 +11,13 @@ import toast, { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar/Navbar';
 
 
-const notify = () => toast.success('Here is your toast.',
-   {
-    duration: 5000,
-    position: 'top-right'
-  }
-  
-);
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
  
   const [leptons, setLeptons] = useState([])
   const [quarks, setQuarks] = useState([])
-
-
- 
-
-
-
- 
 
 
   const openModal = () => {
@@ -38,45 +25,22 @@ function App() {
   };
   
 
-
-
-
-
-
   return (
     <>
     <Navbar></Navbar>
-
       <div>
-
-
-        {/* <SimpleModal
-          isOpen={modalForEditNameIsOpen}    
-          onClose={() => setModalForEditNameIsOpen(false)}
-        >
-          <p>
-
-
-          </p>
-        </SimpleModal> */}
-      
+     
      
       <Toaster />
 
-      <button onClick={() => setCount((count) => {
-          count + 1; 
-          // setModalIsOpen(!modalIsOpen);
-          notify();
-          })}>
-          проверить тоаст {count}
-        </button>
+
       
 
       </div>
 
-      Лептоны:
+      {/* Лептоны: */}
       {/* <ParticlesGroup particlesGroup={leptons}></ParticlesGroup> <br></br> */}
-      Кварки:
+      {/* Кварки: */}
       {/* <ParticlesGroup particlesGroup={quarks}></ParticlesGroup> <br></br> */}
 
       

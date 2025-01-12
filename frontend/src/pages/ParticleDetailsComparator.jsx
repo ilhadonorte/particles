@@ -59,6 +59,12 @@ function ParticleDetailComparator() {
           {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.name_ru}</option>)}
         </select>
       <hr></hr>
+
+      Частица распадается следующими способами: если распадов нет то возможно они пока не зафиксированы или нет данных
+
+      Частица рождается при распадах:
+      
+      Если нет то частица рождается при столкновениях и прочих внешних воздействиях
     </div>
 
   )

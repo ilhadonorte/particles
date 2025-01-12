@@ -1,10 +1,10 @@
 from datetime import datetime
-import time 
+import os
 import pdg
 import pdg.data
 import pdg.particle
 import pdg.decay
-
+os.system('clear')
 api = pdg.connect('sqlite:///pdgall-2024-v0.1.2.sqlite')
 
 elecrton = api.get('S003')[0]
@@ -12,16 +12,17 @@ print(elecrton.mass)
 all_particles = api.get_particles()
 tp = 0
 ap = 0
-for particle in all_particles:
-    items = api.get(particle.pdgid)
+for count, particle in enumerate(all_particles):
+    print(f"исследуем частицу {count} {particle.baseid} в базе есть заряженных состояний: {len(particle)}")
+    # items = api.get(particle.pdgid)
     ap += 1
-    print("у частицы", particle, "в базе есть заряженных состояний: ", len(items))
-    for item in items:
+    for item in particle:
+      #  print(item.branching_fractions())
        if item.has_mass_entry:
-        print(item.mass)
+        print(f"  заряженное состояние {item.baseid} has mass {item.mass} Gev and spin {item.quantum_J}" )
        tp += 1
     # if hasattr(particle, 'mass'):
-print(ap, tp)
+print(f"Частиц найдено {ap} заряженых состояний {tp}" )
 # particle = pdg.data.PdgMass(api, "S008/2024")
 # particle = pdg.data.PdgLifetime(api, "S008/2024")
 # print(pdg.data.PdgLifetime(api, "S003/2024"))

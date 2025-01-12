@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react'
-import greenButton from '/images/strict_button.webp'
+
 import ParticleCard from '../components/ParticleCard/PacticleCard';
 
 import { API_PARTICLES_URL } from "../constants"; 
@@ -10,9 +10,17 @@ import ReactModal from 'react-modal';
 import ModalForDescription from '../components/ModalForDescription/ModalForDescription';
 
 function ParticleOperations() {
+
   const [particles, setParticles] = useState([])
+
+  const [filteredParticles, setFilteredParticles] = useState([])
+
+  const [filteringOption, setFilteringOption] = useState(['show_all'])
+
   const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
+
   const [modalForDescriptionIsOpen, setModalForDescriptionIsOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     baseid:"",
     name_en:"",
@@ -122,6 +130,7 @@ function ParticleOperations() {
       const particles = await response.json();
       // console.log(particles)
       setParticles(particles);
+      setFilteredParticles(particles);
       // const bosons = particles.filter((particle) => particle.is_boson )
       // const baryons = particles.filter((particle) => particle.is_baryon )
       // let leptons = particles.filter((particle) => particle.is_lepton)
@@ -153,6 +162,47 @@ function ParticleOperations() {
   }
 
   console.log("found language for particle operations page:", localStorage.getItem("selectedLanguage") || "Language not was selected yet")
+  
+  
+  const handleFilter = (e) =>{
+    console.log("Selected filter option:", e.target.value)
+    let fp = particles.filter(particle => {
+            switch(e.target.value)
+            {
+              case "show_all": return true;
+              case "bosons": return particle.is_boson;
+              case "barions": return particle.is_baryon;
+              case "leptons": return particle.is_lepton;
+              case "mesons": return particle.is_meson;
+              case "quarks": return particle.is_quark;
+              // помнить что есть частицы не попадающие под эту классификацию, что это за частицы придется разираться
+            }
+                
+          })
+    // console.log(particles)
+    console.log("отфильтрованный массив: ", fp)
+    setFilteredParticles(fp)
+    
+
+  }
+  
+const handleSorting = (e) => {
+  console.log("Selected sorting option:", e.target.value)
+  let sp = filteredParticles.sort((a, b) =>
+  {
+    switch(e.target.value){
+      case "decays": return a.decays_counter > b.decays_counter ? -1 : 1;
+      case "burns": return a.burns_counter > b.burns_counter ? -1 : 1;
+      case "charged_states_counter": return a.charged_states_counter > b.charged_states_counter ? -1 : 1;
+    }
+  }
+
+  )
+  console.log("отсортированный массив: ", sp)
+  console.log("сейчас хук должен перерисовать компонент")
+  setFilteredParticles(sp)
+} 
+  
   return (
     <div>
 
@@ -169,20 +219,6 @@ function ParticleOperations() {
       
       <h1>Particle operations page</h1>
       
-      <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
-      <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
-      <a href="https://redketchup.io/color-picker" target='blank'> color picker</a> | 
-      <a href="https://docs.djangoproject.com/en/5.1/" target='blank'> django</a> | 
-      <a href="https://reactcommunity.org/react-modal/" target='blank'> react-modal</a> | 
-      <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
-      <a href="https://react.dev/reference/react-dom/components/select" target='blank'> react.dev</a> | 
-      <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
-      <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
-      <hr></hr>
-      <img src={greenButton} alt="bsdf" />
-
-      
-
 
         <button
           className="modal-show-button"
@@ -199,16 +235,32 @@ function ParticleOperations() {
         </button>
 
       <label>отфильтровать только</label>
-        <select name="compararComParticle">
-          <option>бозоны</option>
-          <option>мезоны</option>
-          <option>барионы</option>
-          <option>кварки</option>
-          <option>лепоны</option>
+        &nbsp;
+        <select name="compararComParticle" onChange={handleFilter}>
+          <option value={'show_all'}>show all particles</option>
+          <option value={'bosons'}>бозоны</option>
+          <option value={'mesons'}>мезоны</option>
+          <option value={'barions'}>барионы</option>
+          <option value={'quarks'}>кварки</option>
+          <option value={'leptons'}>лептоны</option>
           {/* {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.name_ru}</option>)} */}
         </select>
+        &nbsp;
+        всего найдено частиц: <b>{filteredParticles.length}</b>
+        &nbsp;
+        <label>сортировать по:</label>
+        &nbsp;
+        <select name="sortingParticle" onChange={handleSorting}>
+          <option value={''}>------</option>
+          <option value={'masses'}>массе</option>
+          <option value={'decays'}>распадам</option>
+          <option value={'burns'}>рождениям</option>
+          <option value={'charged_states_counter'}>заряженным состояниям</option>
+        </select>
+        &nbsp;
+
       <div style={styles}>
-      {particles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
+      {filteredParticles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
       </div>  
       
     </div>
