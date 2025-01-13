@@ -163,9 +163,9 @@ export default function ParticleCard({particle})
         <div className="particleCard"
         style={{ borderColor: backgroundColor }}
         >
-            ({particle.name_ru}/{particle.name_pt}) <br></br>
+            № <b>{particle.number}</b> {particle.name_ru}/{particle.name_pt} <br></br>
               
-              <span className="left">№{particle.number}</span>
+              <span className="left">spin <b>{particle.spin}</b></span>
               <span className="right">burns: {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : 0}</span><br></br>
 
               <span className="left">baseid <b>{particle.baseid}</b></span>

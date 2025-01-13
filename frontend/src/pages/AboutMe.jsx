@@ -75,7 +75,8 @@ function AboutMe() {
           notify();
           })}>
           проверить тоаст {count}
-        </button>
+        </button> <br></br>
+        
       <img src={greenButton} alt="bsdf" />
       <hr></hr>
     </div>

@@ -16,7 +16,7 @@ import pdg
 from .serializers import *
 from .models import *
 
-os.system('clear')
+# os.system('clear')
 
 api = pdg.connect('sqlite:///pdgall-2024-v0.1.2.sqlite')
 # файл пгдаты похоже надо класть в корень проекта, из папки приложения непонятно как подключать
@@ -38,6 +38,7 @@ class ParticleCard():
             is_lepton,
             is_meson,
             is_quark,
+            spin,
             decays_counter = 0,
             burns_counter = 0,
             charged_states_counter = 0
@@ -56,6 +57,7 @@ class ParticleCard():
         self.is_lepton = is_lepton
         self.is_meson = is_meson
         self.is_quark = is_quark
+        self.spin = spin
         self.decays_counter = decays_counter if decays_counter is not None else 0
         self.burns_counter = burns_counter if burns_counter is not None else 0
         self.charged_states_counter = charged_states_counter
@@ -64,22 +66,22 @@ class ParticleCard():
 
 # all_particles = api.get_particles()
 # all_objects = api.get_all()
-all_decays = []
+# all_decays = []
 # print("Всего объектов было: ", len(list(all_objects)))
 # print("из них частиц:", len(list(all_particles)))
 
-for item in api.get_all():
+# for item in api.get_all():
     # один раз сразу находим только распады, так как их 7253 из 20087 объектов убрать из гета в начало файла чтобы не выполнялось при каждом обращении а эндпоинту. Надо "образуется при распаде х" сделать, чтобы понятно было откуда они берутся.
     # print(item.baseid) сделать сравнение масс и жизней с другими по выбору, электрн, протон..
-    if hasattr(item, "subdecay_level"):
+    # if hasattr(item, "subdecay_level"):
     #     print(item)
-        all_decays.append(item)
+        # all_decays.append(item)
 # print("из них распадов:", len(all_decays))
 
 
 
 class ParticlesView(APIView):
-    @method_decorator(cache_page(10*9991))
+    @method_decorator(cache_page(8*(1+9991*0))) # менять последний 1 на 0 чтобы отключать
 
     def get(self,request):
         
@@ -87,41 +89,48 @@ class ParticlesView(APIView):
         particle_cards = []
         
         for count, item in enumerate(api.get_particles()):
+            decays_counter = 0
+            burns_counter = 0
+            for decay in item[0].branching_fractions():
+                decays_counter += 1            
             
-            for chs in item:
-                if chs.has_mass_entry:
-                    print(f"  заряженное состояние {item.baseid} has mass {chs.mass} Gev and spin {chs.quantum_J}" )
+            # if item[0].has_mass_entry:
+                # print(f"  заряженное состояние {item.baseid} has mass {item[0].mass} GEv and spin {item[0].quantum_J}" )
             
+            # if item[0].has_lifetime_entry:
+                # print("lifetime", item[0].lifetime)
+            # else:
+                # print("n/d")  
+
             particle = pdg.data.PdgData(api, item.pdgid)
             
             
-            charged_states_counter = len(item)
             particle_details = pdg.particle.PdgParticle(api, item.pdgid)
+
             try:
-                name_ru = ParticleNamesModel.objects.get(baseid=item.baseid).name_ru
-            except ParticleNamesModel.DoesNotExist:
-                name_ru = item.baseid
+                names = ParticleNamesModel.objects.get(baseid=item[0].baseid)
             
-            try:
-                name_pt = ParticleNamesModel.objects.get(baseid=item.baseid).name_pt
-            except ParticleNamesModel.DoesNotExist:
-                name_pt = item.baseid
+                name_ru = names.name_ru if names.name_ru else item[0].baseid
+                name_en = names.name_en if names.name_en else item[0].baseid
+                name_pt = names.name_pt if names.name_pt else item[0].baseid
+            except ParticleNamesModel.DoesNotExist as error:
+                print("item", item[0].baseid, "not found in ParticleNamesModel database\n", error )
+            print(names, name_ru, name_en, name_pt)
+
+            # try:
+            #     name_pt = ParticleNamesModel.objects.get(baseid=item.baseid).name_pt
+            # except ParticleNamesModel.DoesNotExist:
+            #     name_pt = item.baseid
             
-            try:
-                name_en = ParticleNamesModel.objects.get(baseid=item.baseid).name_en
-            except ParticleNamesModel.DoesNotExist:
-                name_en = item.baseid
+            # try:
+            #     name_en = ParticleNamesModel.objects.get(baseid=item.baseid).name_en
+            # except ParticleNamesModel.DoesNotExist:
+            #     name_en = item.baseid
             
-            decays_counter = 0
-            burns_counter = 0
-            for decay in all_decays:
-                if particle.baseid in decay.baseid:
-                    # print("есть такой распад:", item.baseid, item.subdecay_level, item.get_parent_pdgid()) 
-                    # print(item.decay_products)
-                    decays_counter += 1
-                if particle.description in decay.description.split(">")[1]:
+
+                # if particle.description in decay.description.split(">")[1]:
                     # print("найдено рождение частицы", particle.description, "в распаде: ", decay.baseid, " вот так:", decay.description)
-                    burns_counter += 1
+                    # burns_counter += 1
             # print("всего частица рождается в распадах других, раз: ", burns_counter) 
             
             # print("particle ", particle.baseid, "has", decays_counter, "decays")
@@ -139,9 +148,10 @@ class ParticlesView(APIView):
                 is_lepton = particle_details.is_lepton,
                 is_meson = particle_details.is_meson,
                 is_quark = particle_details.is_quark,
+                spin = item[0].quantum_J if item[0].quantum_J else "n/d",
                 decays_counter = decays_counter,
                 burns_counter = burns_counter,
-                charged_states_counter = charged_states_counter
+                charged_states_counter = len(item)
                 # mass=1
             )
             # print(particle_card.number)
@@ -169,6 +179,7 @@ class DescriptionViewSet(viewsets.ModelViewSet):
 
 
 class ParticleNameView(APIView):
+
         
     def get(self, request, *args, **kwargs):
         print("вошли в get метод, редактировать будем имя ", kwargs['baseid'])
@@ -202,3 +213,12 @@ class ParticleNameView(APIView):
         serializer = ParticleNameSerializer(particle)
         print("название частицы было успешно отредактировано:\n",serializer.data )
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
+
+
+class ParticleDetailView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        print("вошли в get метод ParticleDetailView, имя ", kwargs['baseid'])
+        particle = api.get(kwargs['baseid'])
+    pass    

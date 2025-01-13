@@ -39,7 +39,7 @@ function ParticleDetailComparator() {
   console.log("found language for particle details page:", localStorage.getItem("selectedLanguage") || "Language not was selected yet")
   return (
     <div>
-      <h1>Particle details e particle comparator page</h1>
+      <h3>Particle details e particle comparator page</h3>
       <label>
         Выберите частицу:
         <select name="selectedParticle" onChange={handleSelectedParticle}>
@@ -48,19 +48,22 @@ function ParticleDetailComparator() {
         </select>
       </label>
         
-      сравнивать с частицей:
+      сравнить с:
         
         <select name="compararComParticle" onChange={handleSelectParticleForComparar}>
           {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.baseid} / {particle.name_ru}</option>)}
         </select>
         <br></br>
+
         сравнивать с массой:
         <select name="compararComParticle">
           {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.name_ru}</option>)}
         </select>
       <hr></hr>
 
-      Частица распадается следующими способами: если распадов нет то возможно они пока не зафиксированы или нет данных
+      {!params.baseid ? 'Частица не выбрана, выберите частицу из списка' : 'выбрана частица' + <b> + params.baseid + </b>} <br></br>
+
+      Частица <b>{params.baseid}</b> распадается следующими способами: если распадов нет то возможно они пока не зафиксированы или нет данных
 
       Частица рождается при распадах:
       

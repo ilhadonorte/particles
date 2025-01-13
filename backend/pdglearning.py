@@ -7,22 +7,39 @@ import pdg.decay
 os.system('clear')
 api = pdg.connect('sqlite:///pdgall-2024-v0.1.2.sqlite')
 
-elecrton = api.get('S003')[0]
-print(elecrton.mass)
-all_particles = api.get_particles()
-tp = 0
-ap = 0
-for count, particle in enumerate(all_particles):
-    print(f"исследуем частицу {count} {particle.baseid} в базе есть заряженных состояний: {len(particle)}")
-    # items = api.get(particle.pdgid)
-    ap += 1
-    for item in particle:
+#  B033 charded states: 8 decays: 5 burns: 78 
+# ps = api.get('B033')
+#  M036 charded states: 3 decays: 6 burns: 41
+# ps = api.get('M036')
+#  S003 charded states: 2
+ps = api.get('')
+
+print("Частица", ps, "имееет", len(ps), "заряженных состояний")
+for p in ps: #<class 'pdg.particle.PdgParticle'>
+    # print(type(p), p.__dict__)
+    print("\nname ",p.name, p.description, p.mass, "GEv, spin", p.quantum_J, "mcid", p.mcid, ", charge:", p.charge)
+    if p.has_lifetime_entry:
+       print(p.lifetime)
+    else:
+       print("n/d")   
+    for bf in p.branching_fractions():
+      print("   ", bf ) # <class 'pdg.decay.PdgBranchingFraction'>
+
+
+# all_particles = api.get_particles()
+# tp = 0
+# ap = 0
+# for count, particle in enumerate(all_particles):
+#     print(f"исследуем частицу {count} {particle.baseid} в базе есть заряженных состояний: {len(particle)}")
+#     # items = api.get(particle.pdgid)
+#     ap += 1
+#     for item in particle:
       #  print(item.branching_fractions())
-       if item.has_mass_entry:
-        print(f"  заряженное состояние {item.baseid} has mass {item.mass} Gev and spin {item.quantum_J}" )
-       tp += 1
+      #  if item.has_mass_entry:
+      #   print(f"  заряженное состояние {item.baseid} has mass {item.mass} Gev and spin {item.quantum_J}" )
+      #  tp += 1
     # if hasattr(particle, 'mass'):
-print(f"Частиц найдено {ap} заряженых состояний {tp}" )
+# print(f"Частиц найдено {ap} заряженых состояний {tp}" )
 # particle = pdg.data.PdgMass(api, "S008/2024")
 # particle = pdg.data.PdgLifetime(api, "S008/2024")
 # print(pdg.data.PdgLifetime(api, "S003/2024"))
