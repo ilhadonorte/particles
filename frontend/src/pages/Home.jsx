@@ -1,8 +1,10 @@
+import { ParticlesContext } from '../ParticlesContext'
 import standartModel from '/images/standart_model.png'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 function HomePage() {
-  
+  const pc = useContext(ParticlesContext)
+  console.log("particles from context at home page: ", pc)
   // useEffect(() => {
   //   localStorage.setItem('selectedLanguage', selectedLanguage);
   //   }, []);

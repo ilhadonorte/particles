@@ -41,13 +41,16 @@ function AboutMe() {
   return (
     <div>
         <h1>About Me Page</h1>
-        <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group</a> | 
+        <a href="https://pdg.lbl.gov/2024/api/index.html" target='blank'> pdg group api</a> | 
+        <a href="https://pdglive.lbl.gov/Viewer.action" target='blank'> pdg group live</a> | 
       <a href="https://htmlcolorcodes.com/" target='blank'> html colors</a> | 
       <a href="https://redketchup.io/color-picker" target='blank'> color picker</a> | 
       <a href="https://docs.djangoproject.com/en/5.1/" target='blank'> django</a> | 
+      <a href="https://www.django-rest-framework.org/" target='blank'> drf</a> | 
       <a href="https://reactcommunity.org/react-modal/" target='blank'> react-modal</a> | 
       <a href="https://react-hot-toast.com/docs" target='blank'> toast notifications</a> | 
       <a href="https://react.dev/reference/react-dom/components/select" target='blank'> react.dev</a> | 
+      <a href="https://redis-py.readthedocs.io/en/stable/index.html" target='blank'> redis-py</a> | 
       <a href="http://127.0.0.1:8000/api/particles/" target='blank'> api particles</a> | 
       <a href="http://127.0.0.1:8000/api/name/" target='blank'> api name</a> | 
       <hr></hr>

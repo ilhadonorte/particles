@@ -1,9 +1,21 @@
 import './Navbar.css';
 import {NavLink} from "react-router";
-import { useState, React} from 'react'
+import { useState, useEffect, React} from 'react'
 
-function Navbar() {
+
+
+export default function Navbar() {
+  // const [particles, setParticles] = useState([])
   const [selectedLanguage, setSelectedLanguage] = useState("");
+
+
+  
+  // useEffect(() => {
+  //   fetchParticles();
+  //   // минин эту функцию расписал внутри самого хука почему
+  // }, []);  
+
+  
 
   const handleLanguageSelect = (e) => {
     setSelectedLanguage(e.target.value)
@@ -16,9 +28,9 @@ function Navbar() {
         <ol>
             <li><NavLink to={"/"}>Home</NavLink></li>
             <li><NavLink to={"/explaine"}>How to use</NavLink></li>
-            <li><NavLink to={"/mesons"}>Mesons</NavLink></li>
-            <li><NavLink to={"/barions"}>Barions</NavLink></li>
-            <li><NavLink to={"/particle-operations"}>Particle operations</NavLink></li>
+            {/* <li><NavLink to={"/mesons"}>Mesons</NavLink></li>
+            <li><NavLink to={"/barions"}>Barions</NavLink></li> */}
+            <li><NavLink to={"/particle-operations"}>All particles </NavLink></li>
             <li><NavLink to={"/particle-detail"}>Particle details</NavLink></li>
             <li><NavLink to={"/about"}>About</NavLink></li>
             <li id="group1">
@@ -34,4 +46,3 @@ function Navbar() {
   )
 }
 
-export default Navbar

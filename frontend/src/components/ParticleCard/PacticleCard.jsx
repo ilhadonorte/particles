@@ -25,7 +25,7 @@ export default function ParticleCard({particle})
     else {backgroundColor = "#78281F"}
     // console.log("backgroundColor:", backgroundColor, particle.number)
     let urlForEditName = API_NAME_URL + particle.baseid + "/"
-    let urlForAllDetails = API_PDG_REST_URL + particle.baseid 
+    
 
 
 
@@ -177,7 +177,7 @@ export default function ParticleCard({particle})
             <a href={urlForEditName} 
              target='blank' 
              onClick={(e) =>handleEditName(particle, e)}> edit </a> 
-             | <a href={urlForAllDetails} target='blank'> more </a>
+             
              | <Link to={"/particle-details/"+particle.baseid}>details</Link>
               
              <span className="right">decays: {particle.decays_counter > 0 ? <b>{particle.decays_counter}</b> : 0}</span><br></br>

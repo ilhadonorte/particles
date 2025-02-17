@@ -1,5 +1,6 @@
 from datetime import datetime
 import time, os
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -63,10 +64,13 @@ class ParticleCard():
         self.charged_states_counter = charged_states_counter
         # self.mass = mass if mass is not None else 0
 
+all_names = ParticleNamesModel.objects.all()
+
+
 
 # all_particles = api.get_particles()
 # all_objects = api.get_all()
-# all_decays = []
+
 # print("Всего объектов было: ", len(list(all_objects)))
 # print("из них частиц:", len(list(all_particles)))
 
@@ -81,7 +85,7 @@ class ParticleCard():
 
 
 class ParticlesView(APIView):
-    @method_decorator(cache_page(8*(1+9991*0))) # менять последний 1 на 0 чтобы отключать
+    @method_decorator(cache_page(8*(1+9991*1))) # менять последний 1 на 0 чтобы отключать
 
     def get(self,request):
         
@@ -93,7 +97,8 @@ class ParticlesView(APIView):
             burns_counter = 0
             for decay in item[0].branching_fractions():
                 decays_counter += 1            
-            
+
+            # print("Этот шаг занял", time.time()-start_time)    
             # if item[0].has_mass_entry:
                 # print(f"  заряженное состояние {item.baseid} has mass {item[0].mass} GEv and spin {item[0].quantum_J}" )
             
@@ -108,14 +113,15 @@ class ParticlesView(APIView):
             particle_details = pdg.particle.PdgParticle(api, item.pdgid)
 
             try:
-                names = ParticleNamesModel.objects.get(baseid=item[0].baseid)
-            
+                # names = ParticleNamesModel.objects.get(baseid=item[0].baseid)
+                names = all_names.get(baseid=item[0].baseid)
                 name_ru = names.name_ru if names.name_ru else item[0].baseid
                 name_en = names.name_en if names.name_en else item[0].baseid
                 name_pt = names.name_pt if names.name_pt else item[0].baseid
             except ParticleNamesModel.DoesNotExist as error:
-                print("item", item[0].baseid, "not found in ParticleNamesModel database\n", error )
-            print(names, name_ru, name_en, name_pt)
+                c = 1
+                # print("Error: item", item[0].baseid, "not found in ParticleNamesModel database\n", error )
+            # print(names, name_ru, name_en, name_pt)
 
             # try:
             #     name_pt = ParticleNamesModel.objects.get(baseid=item.baseid).name_pt
@@ -220,5 +226,21 @@ class ParticleDetailView(APIView):
 
     def get(self, request, *args, **kwargs):
         print("вошли в get метод ParticleDetailView, имя ", kwargs['baseid'])
-        particle = api.get(kwargs['baseid'])
+        charged_states = api.get(kwargs['baseid'])
+
+        charged_states_names = [charged_state.name for charged_state in charged_states]
+        all_decays_splitted = cache.get("all_decays_splitted")
+        
+        for charged_state_name in charged_states_names: 
+            burns = []
+            for decay in all_decays_splitted:
+                if charged_state_name in decay:
+                    burns.append(
+                    decay.description
+                )
+            particle_details = {
+            charged_state_name : burns
+            }
+        print(particle_details)
+
     pass    

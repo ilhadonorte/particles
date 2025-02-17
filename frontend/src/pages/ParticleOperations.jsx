@@ -1,21 +1,26 @@
 import React from 'react';
 import axios from 'axios';
-import { useState, useEffect } from 'react'
-
+import { useState, useContext } from 'react'
+import { ParticlesContext } from '../ParticlesContext'
+import { useLocation } from 'react-router-dom';  
 import ParticleCard from '../components/ParticleCard/PacticleCard';
+import { API_NAME_URL  } from "../constants"; 
 
-import { API_PARTICLES_URL } from "../constants"; 
-
-import ReactModal from 'react-modal';
+import toast
+ from 'react-hot-toast';
+// import ReactModal from 'react-modal';
 import ModalForDescription from '../components/ModalForDescription/ModalForDescription';
 
 function ParticleOperations() {
+  
+  // const location = useLocation();  
+  // const particles = location.state?.particles;  
+  const particles = useContext(ParticlesContext)
 
-  const [particles, setParticles] = useState([])
-
+  console.log("particles in all particles page: ", {particles})
   const [filteredParticles, setFilteredParticles] = useState([])
 
-  const [filteringOption, setFilteringOption] = useState(['show_all'])
+  // const [filteringOption, setFilteringOption] = useState(['show_all'])
 
   const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
 
@@ -122,38 +127,6 @@ function ParticleOperations() {
   );
 
 
-  const fetchParticles = async () => {
-    console.time('fetchParticles');
-  
-    try {
-      const response = await fetch(API_PARTICLES_URL);
-      const particles = await response.json();
-      // console.log(particles)
-      setParticles(particles);
-      setFilteredParticles(particles);
-      // const bosons = particles.filter((particle) => particle.is_boson )
-      // const baryons = particles.filter((particle) => particle.is_baryon )
-      // let leptons = particles.filter((particle) => particle.is_lepton)
-      // setLeptons(leptons)
-      // const mesons = particles.filter((particle) => particle.is_meson )
-      // let quarks = particles.filter((particle) => particle.is_quark )
-      // setQuarks(quarks)
-      // console.log(bosons)
-      // console.log(baryons)
-      // console.log(leptons)
-      // console.log(mesons)
-      // console.log(quarks)
-    } catch (err) {
-      console.log(err);
-    }
-    console.timeEnd('fetchParticles');
-  };  
-
-  
-  useEffect(() => {
-    fetchParticles();
-    // минин эту функцию расписал внутри самого хука почему
-  }, []);  
 
   const styles = {
     display: "grid",
@@ -206,18 +179,18 @@ const handleSorting = (e) => {
   return (
     <div>
 
-      <ReactModal 
+      {/* <ReactModal 
         isOpen={modalForEditNameIsOpen}
         parentSelector={() => document.querySelector('#root')}
         onRequestClose={closeModal}
       >
           {modalContentForName}
-      </ReactModal>
+      </ReactModal> */}
 
       <ModalForDescription isOpen={modalForDescriptionIsOpen}></ModalForDescription>
 
       
-      <h1>Particle operations page</h1>
+      <h1>Particles operations page</h1>
       
 
         <button
@@ -260,7 +233,16 @@ const handleSorting = (e) => {
         &nbsp;
 
       <div style={styles}>
-      {filteredParticles.map(particle => <ParticleCard key={particle.number} particle={particle}></ParticleCard>)}
+      {particles.map(particle => <ParticleCard 
+        key={particle.number} 
+        particle={particle}
+        onMouseEnter={() => console.log("houvered particle ", particle.baseid)}
+        // {/* доделать открытив в новой вкладке */}
+        // {/* onClick={window.open("/particle-details/"+ particle.baseid, '_blank') } */}
+        >
+        
+         
+        </ParticleCard>)}
       </div>  
       
     </div>

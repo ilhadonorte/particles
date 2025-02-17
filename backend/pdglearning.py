@@ -1,32 +1,147 @@
 from datetime import datetime
+import json
+from django.core.cache import cache
+from django.core import serializers
 import os
+import pprint
+import time
 import pdg
 import pdg.data
 import pdg.particle
 import pdg.decay
+import pickle 
+import redis
+from redis.commands.json.path import Path
+from dotenv import load_dotenv
+
+# Carregando as variáveis de ambiente do arquivo .env
+load_dotenv()
 os.system('clear')
 api = pdg.connect('sqlite:///pdgall-2024-v0.1.2.sqlite')
 
+r = redis.Redis(host=os.getenv("REDIS_SERVER"), port=6379, decode_responses=True)
+r.set('foo', 'bar')
+
+class Decay():
+
+   def __init__(self, parent_baseid, description, splitted_description):
+      self.parent_baseid = parent_baseid
+      self.description = description
+      self.splitted_description = splitted_description
+
+start_time = time.time()
+print("Начинаем поиск всех распадов в Redis...")
+
+def cache_all_decays():
+   if r.hlen('all_decays') > 6500:
+      print("Данные распадов уже найдены в Redis, это заняло: ", time.time()- start_time)
+   else:
+      print("Данные распадов не найдены в Redis, начинаем поиск всех распадов в бд, чтобы закешировать, занимает несколько секунд...")
+      all_decays = {}
+
+      for particle in api.get_particles():
+         for bf in particle[0].branching_fractions():
+            all_decays[bf.description] = particle.baseid
+            # тоесть получаем словарь распад(они уникальные), бэйзид для ссылки, нарезанный распад для поиска рождений
+      decay_splitting_time = time.time()
+      print(f"Всего нашли распадов: {len(all_decays)}, поиск занял { decay_splitting_time - start_time} и должен быть закеширован" )
+
+      print(f"Caching all decays to Redis...")
+      for key, value in all_decays.items():
+         r.hset('all_decays', key, value)
+      print(f"Redis chaching completed занял { time.time()- decay_splitting_time}")
+
+
+def cache_all_burns():
+   start_time = time.time()
+   # print(r.scard("all_burns"))
+   # print(r.zcard("all_burns"))
+   if len(r.hgetall("all_burns")) < 300:
+      all_decays = r.hgetall('all_decays')
+      for charged_states in api.get_particles():
+         for charged_state in charged_states: #<class 'pdg.particle.PdgParticle'>
+            burns = {}
+            for key, value in all_decays.items():
+               if charged_state.name in key.split():
+                  burns[key] = value
+                  # print(burns[value])
+                  r.hset("all_burns" + ":" + charged_state.name, key, value)       
+   print("Поиск рождений частиц и добавление в Redis (сделать балком pipelines) заняло: ", time.time()- start_time)
+            # print("Рождение заряженного состояния ", charged_state.name, "было найдено", len(burns), "способами:")
+   # decays = []
+   # for bf in charged_state.branching_fractions():
+   #    decays.append(bf.description)
+
+   # print(f'\nНачинаем искать рождения заряженного состояния {charged_state.name} in Redis ')
+   
+   # is_burns_exists = r.hexists("all_burns" + ":" + charged_state.name, key)
+   # burns = r.hgetall("all_burns" + ":" + charged_state.name)
+   # if burns:
+   #    print(f"Рождения уже были найдены ранее")
+   # else:   
+   #    print(f"Рождения небыли найдены ранее, придется вычислять")
+   
+   
+   # pprint.pprint(burns)
+
+def cache_particle_cards():
+   for charged_states in api.get_particles():
+      decays_counter = r.hgetall("all_decays").items()
+      # print(decays_counter)
+      # if charged_states.has_mass_entry:
+      #   mass = charged_states.mass
+      # else: mass = "n/d"   
+      r.json().set("particle_cards" + ":" + charged_states.description, "$", 
+         {"charged_states":len(charged_states)} )
+   #    pass
+
+cache_all_decays()
+
+# cache_all_burns()
+
+cache_particle_cards()
 #  B033 charded states: 8 decays: 5 burns: 78 
 # ps = api.get('B033')
 #  M036 charded states: 3 decays: 6 burns: 41
 # ps = api.get('M036')
-#  S003 charded states: 2
-ps = api.get('')
-
-print("Частица", ps, "имееет", len(ps), "заряженных состояний")
-for p in ps: #<class 'pdg.particle.PdgParticle'>
-    # print(type(p), p.__dict__)
-    print("\nname ",p.name, p.description, p.mass, "GEv, spin", p.quantum_J, "mcid", p.mcid, ", charge:", p.charge)
-    if p.has_lifetime_entry:
-       print(p.lifetime)
-    else:
-       print("n/d")   
-    for bf in p.branching_fractions():
-      print("   ", bf ) # <class 'pdg.decay.PdgBranchingFraction'>
+#  S003 electron charded states: 2
 
 
-# all_particles = api.get_particles()
+pdgid = 'M036'
+charged_states = api.get(pdgid)
+particle_details = {}
+# r.json().set("mykey", ".", {"hello": "world", "i am": ["a", "json", "object!"]})
+print("Частица", charged_states.description, "имееет", len(charged_states), "заряженных состояний:")
+for charged_state in charged_states: #<class 'pdg.particle.PdgParticle'>
+   burns = r.hgetall("all_burns" + ":" + charged_state.name)
+   r.json().set("charged_states" + ":" + charged_states.description + ":" + charged_state.name, "$", {charged_state.name:charged_state.charge, "burns_counter":len(burns)} )
+   print(f"    {charged_state.name}, mass: {charged_state.mass} GEv, spin {charged_state.quantum_J}, mcid {charged_state.mcid}, charge: {charged_state.charge} ")
+   pprint.pprint(burns)
+   # if charged_state.has_lifetime_entry:
+   #     print(f"lifetime: {charged_state.lifetime}")
+   # else:
+   #    print("n/d")
+
+
+   # print("decays:", len(decays))
+   
+   # particle_details[charged_state.name] = burns
+   
+# pprint.pprint(particle_details)
+# print(repr(particle_details))
+
+   # burn = {
+   #     'pdgid': particle.pdgid,
+   #     'name': particle.description,
+   #     'burns': burns
+   #   }
+      # all_burns.append(burn)
+
+   # burn_num = 4
+# algo = pdg.data.PdgData(api, pdgid, edition=None)
+# print(f"algo: {algo}   type: {type(algo)}   algo.description: {algo.description}  algo.get_particle(): {algo.get_particle} algo.get_particles(): {algo.get_particles}")
+
+# print(all_burns.index(pdgid))
 # tp = 0
 # ap = 0
 # for count, particle in enumerate(all_particles):
@@ -87,7 +202,6 @@ for p in ps: #<class 'pdg.particle.PdgParticle'>
 
 # ended = datetime.now()
 # end_time = time.time()
-# print("Запрос данных занял: ", ended - start, "mc", end_time - start_time)    
     
 
 # for count, item in enumerate(api.get_particles()):
@@ -113,3 +227,5 @@ for p in ps: #<class 'pdg.particle.PdgParticle'>
   #   item.__dict__,
   #   item.baseid, 
   #   item.description))
+
+print(f"\nЗапрос данных занял: {time.time() - start_time} sec")    
