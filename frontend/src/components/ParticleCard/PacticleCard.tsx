@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './ParticleCard.css' 
 import { API_PDG_REST_URL, API_NAME_URL } from "../../constants"; 
 import ReactModal from 'react-modal';
@@ -8,7 +8,10 @@ import axios from 'axios';
 
 export default function ParticleCard({particle})
 {
+    const [isHovered, setIsHovered] = useState<boolean>(false);  
+
     const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
+
     const [formData, setFormData] = useState({
         baseid: "",
         name_en: "",
@@ -16,13 +19,13 @@ export default function ParticleCard({particle})
         name_pt: ""
       })
 
-    let backgroundColor = "";
-    if (particle.is_boson) { backgroundColor = "#EED95B"}
-    else if (particle.is_lepton) { backgroundColor = "#97EC5F"}
-    else if (particle.is_quark) { backgroundColor = "#DCA9F6"}
-    else if (particle.is_baryon) { backgroundColor = "#138D75"}
-    else if (particle.is_meson) { backgroundColor = "#EB765B"}
-    else {backgroundColor = "#78281F"}
+    let borderColor = "";
+    if (particle.is_boson) { borderColor = "#EED95B"}
+    else if (particle.is_lepton) { borderColor = "#97EC5F"}
+    else if (particle.is_quark) { borderColor = "#DCA9F6"}
+    else if (particle.is_baryon) { borderColor = "#138D75"}
+    else if (particle.is_meson) { borderColor = "#EB765B"}
+    else {borderColor = "#78281F"}
     // console.log("backgroundColor:", backgroundColor, particle.number)
     let urlForEditName = API_NAME_URL + particle.baseid + "/"
     
@@ -149,6 +152,17 @@ export default function ParticleCard({particle})
         // modalContentForName
         setModalForEditNameIsOpen(true)
       }
+
+    const handleMouseEnter = () => {  
+        setIsHovered(true);  
+        console.log("houvered particle ", particle.baseid)
+    };  
+
+    const handleMouseLeave = () => {  
+        setIsHovered(false);  
+    };  
+
+    // console.log(isHovered)
     
     return(
         <>
@@ -161,12 +175,22 @@ export default function ParticleCard({particle})
             </ReactModal>
 
         <div className="particleCard"
-        style={{ borderColor: backgroundColor }}
+            onMouseEnter={handleMouseEnter}  
+            onMouseLeave={handleMouseLeave}  
+        style={{ borderColor: borderColor,
+            backgroundColor: isHovered ? '#e7df8f5c' : 'white',  
+
+         }}
         >
-            № <b>{particle.number}</b> {particle.name_ru}/{particle.name_pt} <br></br>
+            
               
+            <span className="left">№ <b>{particle.number}</b> </span>
+            {particle.name_ru} 
+            <span className="right">mass <b>xxx</b> </span>
+            <br></br>
+
               <span className="left">spin <b>{particle.spin}</b></span>
-              <span className="right">burns: {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : 0}</span><br></br>
+              <span className="right">burns: {particle.burns_counter > 0 ? <b>{particle.burns_counter}</b> : <b>0</b>}</span><br></br>
 
               <span className="left">baseid <b>{particle.baseid}</b></span>
               <span className="right">charded states: {particle.charged_states_counter > 1 ? <b>{particle.charged_states_counter}</b> : particle.charged_states_counter}</span>

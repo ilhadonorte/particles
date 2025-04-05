@@ -17,6 +17,12 @@ import MesonsPage from './pages/Mesons.jsx';
 import BarionsPage from './pages/Barions.jsx';
 import HowToUsePage from './pages/HowToUse.jsx'
 
+// // ✅ Routes are downloaded before rendering
+// const router = createBrowserRouter([
+//   {path: '/', lazy: () => import('./Home')},
+//   {path: '/dashboard', lazy: () => import('Dashboard')}
+// ]);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     

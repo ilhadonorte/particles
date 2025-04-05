@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import *
 
+from django.conf import settings  
+
 class ParticleCardSerializer(serializers.Serializer):
 
     number = serializers.IntegerField()  
@@ -21,6 +23,8 @@ class ParticleCardSerializer(serializers.Serializer):
     burns_counter = serializers.IntegerField()
     charged_states_counter = serializers.IntegerField()
     # mass = serializers.FloatField()
+    particle_type = serializers.CharField(max_length=100)
+
 
 class ParticleNameSerializer(serializers.ModelSerializer):
 

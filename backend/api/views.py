@@ -1,9 +1,11 @@
 from datetime import datetime
 import time, os
+from django.conf import settings  
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+
 
 from rest_framework.views import APIView
 from rest_framework import status
@@ -40,10 +42,11 @@ class ParticleCard():
             is_meson,
             is_quark,
             spin,
+            particle_type,
             decays_counter = 0,
             burns_counter = 0,
-            charged_states_counter = 0
-            # mass = 0
+            charged_states_counter = 0,
+            # mass = 0.
             ):
         
         self.number = number  
@@ -63,6 +66,7 @@ class ParticleCard():
         self.burns_counter = burns_counter if burns_counter is not None else 0
         self.charged_states_counter = charged_states_counter
         # self.mass = mass if mass is not None else 0
+        self.particle_type = particle_type
 
 all_names = ParticleNamesModel.objects.all()
 
@@ -140,6 +144,18 @@ class ParticlesView(APIView):
             # print("всего частица рождается в распадах других, раз: ", burns_counter) 
             
             # print("particle ", particle.baseid, "has", decays_counter, "decays")
+            if particle_details.is_boson:       
+                particle_type = 'boson'
+            elif particle_details.is_meson:
+                particle_type = 'meson'
+            elif particle_details.is_baryon:
+                particle_type = 'baryon'
+            elif particle_details.is_lepton:
+                particle_type = 'lepton'
+            elif particle_details.is_quark:
+                particle_type = 'quark'                
+            else:
+                particle_type = 'unknown'    
 
             particle_card = ParticleCard(
                 number = count,
@@ -157,8 +173,9 @@ class ParticlesView(APIView):
                 spin = item[0].quantum_J if item[0].quantum_J else "n/d",
                 decays_counter = decays_counter,
                 burns_counter = burns_counter,
-                charged_states_counter = len(item)
+                charged_states_counter = len(item),
                 # mass=1
+                particle_type = particle_type
             )
             # print(particle_card.number)
             particle_cards.append(particle_card)

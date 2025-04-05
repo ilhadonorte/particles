@@ -133,3 +133,6 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True 
+
+
+PARTICLE_TYPES = ['boson', 'meson', 'quark', 'lepton', 'unknown']

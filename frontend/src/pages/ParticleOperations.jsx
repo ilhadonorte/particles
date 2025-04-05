@@ -3,13 +3,10 @@ import axios from 'axios';
 import { useState, useContext } from 'react'
 import { ParticlesContext } from '../ParticlesContext'
 import { useLocation } from 'react-router-dom';  
-import ParticleCard from '../components/ParticleCard/PacticleCard';
+import ParticleCard from '../components/ParticleCard/PacticleCard.tsx';
 import { API_NAME_URL  } from "../constants"; 
 
-import toast
- from 'react-hot-toast';
-// import ReactModal from 'react-modal';
-import ModalForDescription from '../components/ModalForDescription/ModalForDescription';
+
 
 function ParticleOperations() {
   
@@ -17,115 +14,11 @@ function ParticleOperations() {
   // const particles = location.state?.particles;  
   const particles = useContext(ParticlesContext)
 
-  console.log("particles in all particles page: ", {particles})
-  const [filteredParticles, setFilteredParticles] = useState([])
+  // console.log("particles in all particles page: ", {particles})
 
-  // const [filteringOption, setFilteringOption] = useState(['show_all'])
+  const [filteredParticles, setFilteredParticles] = useState([...particles])
 
-  const [modalForEditNameIsOpen, setModalForEditNameIsOpen] = useState(false);
-
-  const [modalForDescriptionIsOpen, setModalForDescriptionIsOpen] = useState(false);
-
-  const [formData, setFormData] = useState({
-    baseid:"",
-    name_en:"",
-    name_ru:"",
-    name_pt:""
-  })
-
-  const closeModal = () => {
-    // setModalIsOpen(false);
-    setModalForEditNameIsOpen(false);
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  }; 
-
-  const editParticleName = async function (e)
-{
-  e.preventDefault();
-  await axios.post(API_NAME_URL, formData)
-    .then(function (response) 
-      {
-        console.log("Success!", response.data)
-        console.log(response);
-        toast.success(`Successfully created! ${response.data}` ,
-          {
-            duration: 7000,
-            position: 'top-right'
-          }
-        );
-        setModalForEditNameIsOpen(false)
-      })
-    .catch(function (error) 
-      {
-        console.log(error, API_NAME_URL, formData);
-        console.log("Error during data posting!", error.response?.data);
-        toast.error('This is an error!',
-          {
-           duration: 7000,
-           position: 'top-right'
-         });
-        
-      })
-    .finally(function () 
-      {
-        // toast('Here is your toast.')
-        // выполняется всегда
-      });
-  
-  }
-
-  const modalContentForName = (
-    <div>
-      <h2>Add new particle name</h2>
-
-      <p>
-      <input
-          type="text"
-          name="baseid"
-          value={formData.baseid}
-          placeholder="Particle baseid..."
-          onChange={handleChange}
-        /> 
-        <br></br>
-
-        <input
-          type="text"
-          name="name_ru"
-          value={formData.name_ru}
-          placeholder="Russian name..."
-          onChange={handleChange}
-        />
-        <br></br>
-
-        <input
-          type="text"
-          name="name_pt"
-          value={formData.name_pt}
-          placeholder="Português name..."
-          onChange={handleChange}
-        />
-        | <a href='https://pt.wikipedia.org/wiki/Part%C3%ADcula_elementar#:~:text=Em%20f%C3%ADsica%20de%20part%C3%ADculas%2C%20uma,como%20el%C3%A9trons%2C%20pr%C3%B3tons%20e%20n%C3%AAutrons.' target='blank'>see here</a>
-        <br></br>
-        
-        <button 
-          onClick={() => setModalForEditNameIsOpen(false)}
-          >Cancel 
-        </button>
-
-        <button 
-          onClick = {editParticleName}
-        >Save name </button>
-
-      </p>
-    </div>
-  );
-
+  const chardedStatesCounter = filteredParticles.reduce((accumulator, p) => accumulator + p.charged_states_counter, 0);  
 
 
   const styles = {
@@ -138,7 +31,7 @@ function ParticleOperations() {
   
   
   const handleFilter = (e) =>{
-    console.log("Selected filter option:", e.target.value)
+    // console.log("Selected filter option:", e.target.value)
     let fp = particles.filter(particle => {
             switch(e.target.value)
             {
@@ -148,6 +41,7 @@ function ParticleOperations() {
               case "leptons": return particle.is_lepton;
               case "mesons": return particle.is_meson;
               case "quarks": return particle.is_quark;
+              case "unknown": return particle.particle_type == 'unknown';
               // помнить что есть частицы не попадающие под эту классификацию, что это за частицы придется разираться
             }
                 
@@ -179,35 +73,8 @@ const handleSorting = (e) => {
   return (
     <div>
 
-      {/* <ReactModal 
-        isOpen={modalForEditNameIsOpen}
-        parentSelector={() => document.querySelector('#root')}
-        onRequestClose={closeModal}
-      >
-          {modalContentForName}
-      </ReactModal> */}
-
-      <ModalForDescription isOpen={modalForDescriptionIsOpen}></ModalForDescription>
-
-      
-      <h1>Particles operations page</h1>
-      
-
-        <button
-          className="modal-show-button"
-          onClick={() => setModalForEditNameIsOpen(true)}
-        >
-          Add/edit particle name
-        </button>
-
-        <button
-          className="modal-show-button"
-          onClick={() => setModalForDescriptionIsOpen(true)}
-        >
-          Add/edit description
-        </button>
-
-      <label>отфильтровать только</label>
+      <label>
+        отфильтровать 
         &nbsp;
         <select name="compararComParticle" onChange={handleFilter}>
           <option value={'show_all'}>show all particles</option>
@@ -216,11 +83,16 @@ const handleSorting = (e) => {
           <option value={'barions'}>барионы</option>
           <option value={'quarks'}>кварки</option>
           <option value={'leptons'}>лептоны</option>
+          <option value={'unknown'}>пока не понятные</option>
           {/* {particles.map(particle => <option key={particle.baseid} value={particle.baseid}>{particle.name_ru}</option>)} */}
         </select>
         &nbsp;
-        всего найдено частиц: <b>{filteredParticles.length}</b>
+        всего найдено: <b>{filteredParticles.length}</b>
         &nbsp;
+        заряженных состояний: <b>{chardedStatesCounter}</b> {' '}
+      </label>
+
+
         <label>сортировать по:</label>
         &nbsp;
         <select name="sortingParticle" onChange={handleSorting}>
@@ -233,10 +105,9 @@ const handleSorting = (e) => {
         &nbsp;
 
       <div style={styles}>
-      {particles.map(particle => <ParticleCard 
+      {[...filteredParticles].map(particle => <ParticleCard 
         key={particle.number} 
         particle={particle}
-        onMouseEnter={() => console.log("houvered particle ", particle.baseid)}
         // {/* доделать открытив в новой вкладке */}
         // {/* onClick={window.open("/particle-details/"+ particle.baseid, '_blank') } */}
         >

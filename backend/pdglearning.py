@@ -97,7 +97,7 @@ def cache_particle_cards():
 
 cache_all_decays()
 
-# cache_all_burns()
+cache_all_burns()
 
 cache_particle_cards()
 #  B033 charded states: 8 decays: 5 burns: 78 

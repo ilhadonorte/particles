@@ -14,6 +14,7 @@ import greenButton from '/images/strict_button.webp'
     var jaguapita_moved = new Date("2024-08-22")
     var project_invented = new Date("2022-07-22")
     var car_comprado = new Date("2024-11-14")
+    var caiaque_comprado = new Date("2025-03-12")
 
     var age = Math.ceil((today - birthday) / (1000 * 3600 * 24));
     var r_e = Math.ceil((today - radik_ended) / (1000 * 3600 * 24));
@@ -26,6 +27,7 @@ import greenButton from '/images/strict_button.webp'
     var j_m = Math.ceil((today - jaguapita_moved) / (1000 * 3600 * 24));
     var p_i = Math.ceil((today - project_invented) / (1000 * 3600 * 24));
     var c_c = Math.ceil((today - car_comprado) / (1000 * 3600 * 24));
+    var k_c = Math.ceil((today - caiaque_comprado) / (1000 * 3600 * 24));
   //  console.log(age)
   // https://calcus.ru/kalkulyator-dnej?input=eyJ0eXBlIjoiMiIsImRhdGUxIjoiMjAyNC0wOS0wOCIsImRhdGUyIjoiMjAyNS0wMS0wMiIsImluY2x1ZGVfc3RhcnRfZGF0ZSI6IjEifQ==
 function AboutMe() {
@@ -58,17 +60,18 @@ function AboutMe() {
           Сегодня: {today.toLocaleDateString('ru-Ru')} <br></br>
           {/* BD: {birthday.toDateString()} <br></br> */}
           {/* BD: {birthday.toLocaleDateString('ru-Ru')} <br></br> */}
-          Я прожил уже: {age} дней ({(age/365).toFixed(2)} лет)<br></br>
-          Радик закончен: {r_e} дней назад ({(r_e/365).toFixed(2)} лет назад)<br></br>
-          Португальский учить начал: {p_s} дней назад ({(p_s/365).toFixed(2)} лет назад)<br></br>
-          Бросил ОДУ: {o_d} дней назад ({(o_d/365).toFixed(2)} лет назад)<br></br>
-          В Бразилию уехал: {b_a} дней назад ({(b_a/365).toFixed(2)} лет назад)<br></br>
-          Война началась: {w_s} дней назад ({(w_s/365).toFixed(2)} лет назад)<br></br>
-          Вынужденно живу в парана: {f_m} дней ({(f_m/365).toFixed(2)} лет)<br></br>
-          В жагвафранге мучаюсь уже: {j_t} дней ({(j_t/365).toFixed(2)} лет)<br></br>
-          Перебрался в Jaguapitã: {j_m} дней назад ({(j_m/365).toFixed(2)} лет)<br></br>
-          Проект придуман: {p_i} дней назад, но кажется была мысль и раньше ({(p_i/365).toFixed(2)} лет назад)<br></br>
+          Я прожил уже {age} дней ({(age/365).toFixed(2)} лет)<br></br>
+          Радик закончен {r_e} дней назад ({(r_e/365).toFixed(2)} лет назад)<br></br>
+          Португальский учить начал {p_s} дней назад ({(p_s/365).toFixed(2)} лет назад)<br></br>
+          Бросил ОДУ {o_d} дней назад ({(o_d/365).toFixed(2)} лет назад)<br></br>
+          В Бразилию уехал {b_a} дней назад ({(b_a/365).toFixed(2)} лет назад)<br></br>
+          Война началась {w_s} дней назад ({(w_s/365).toFixed(2)} лет назад)<br></br>
+          Вынужденно живу в парана {f_m} дней ({(f_m/365).toFixed(2)} лет)<br></br>
+          В жагвафранге мучаюсь уже {j_t} дней ({(j_t/365).toFixed(2)} лет)<br></br>
+          Перебрался в Jaguapitã {j_m} дней назад ({(j_m/365).toFixed(2)} лет)<br></br>
+          Проект придуман {p_i} дней назад, но кажется была мысль и раньше ({(p_i/365).toFixed(2)} лет назад)<br></br>
           Машину купил: {c_c} дней назад ({(c_c/365).toFixed(2)} лет назад)<br></br>
+          Каяк купил: {k_c} дней назад ({(k_c/365).toFixed(2)} лет назад)<br></br>
 
           <br></br>
         </p>
