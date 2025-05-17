@@ -9,7 +9,7 @@ import {
 } from "react-router";
 
 
-import AboutMe from './pages/AboutMe';
+import AboutMe from './pages/AboutMe.tsx';
 import ParticleOperations from './pages/ParticleOperations';
 import ParticleDetailsComparator from './pages/ParticleDetailsComparator'
 import HomePage from './pages/Home';
