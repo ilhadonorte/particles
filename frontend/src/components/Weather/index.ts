@@ -1,0 +1,1 @@
+export { WeatherVidget } from './ui/Weather'

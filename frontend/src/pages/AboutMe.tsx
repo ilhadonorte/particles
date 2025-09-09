@@ -9,11 +9,11 @@ import { DatePicker, message } from 'antd';
 
 import dayjs from 'dayjs'
 
-
+import { WeatherVidget } from '../components/Weather';
     
 
-    const birthday = dayjs("1981-7-6")
-    const radik_ended = dayjs("2005-2-25")
+    const birthday = dayjs("1981-07-06")
+    const radik_ended = dayjs("2005-02-25")
     const portugues_started = dayjs("2010-11-25")
     const odu_dropped = dayjs("2012-10-18")
     const beasil_arrival = dayjs("2021-3-11")
@@ -24,6 +24,9 @@ import dayjs from 'dayjs'
     const project_invented = dayjs("2022-07-22")
     const car_comprado = dayjs("2024-11-14")
     const caiaque_comprado = dayjs("2025-03-12")
+    const residente = dayjs("2025-06-01")
+    const dia_de_limao = dayjs("2025-06-12")
+    
 
 
   //  console.log(age)
@@ -47,8 +50,8 @@ function AboutMe() {
     }
    );
   
-  console.log("today: ", {today}, "typeof today: ", typeof(today)); 
-  console.log("selectedDate: ", {selectedDate}, "typeof selectedDate: ", typeof(selectedDate)); 
+  // console.log("today: ", {today}, "typeof today: ", typeof(today)); 
+  // console.log("selectedDate: ", {selectedDate}, "typeof selectedDate: ", typeof(selectedDate)); 
   // console.log({today} - {selectedDate});
 
    
@@ -65,6 +68,8 @@ function AboutMe() {
   let p_i =  selectedDate.diff(project_invented, 'day');
   let c_c =  selectedDate.diff(car_comprado, 'day');
   let k_c =  selectedDate.diff(caiaque_comprado, 'day');
+  let res =  selectedDate.diff(residente, 'day');
+  let limao =  selectedDate.diff(dia_de_limao, 'day');
 
   return (
     <div>
@@ -118,13 +123,16 @@ function AboutMe() {
           Португальский учить начал <b>{p_s}</b> дней назад или {(p_s/365).toFixed(2)} лет назад<br></br>
           Бросил ОДУ <b>{o_d}</b> дней назад или {(o_d/365).toFixed(2)} лет назад<br></br>
           В Бразилию уехал <b>{b_a}</b> дней назад или {(b_a/365).toFixed(2)} лет назад<br></br>
+          Вынужденно живу в Paraná <b>{f_m}</b> дней или {(f_m/365).toFixed(2)} лет<br></br>
           Война началась <b>{w_s}</b> дней назад или {(w_s/365).toFixed(2)} лет назад<br></br>
-          Вынужденно живу в парана <b>{f_m}</b> дней или {(f_m/365).toFixed(2)} лет<br></br>
-          В жагвафранге мучаюсь уже <b>{j_t}</b> дней или {(j_t/365).toFixed(2)} лет<br></br>
-          Перебрался в Jaguapitã <b>{j_m}</b> дней назад или {(j_m/365).toFixed(2)} лет<br></br>
+          
           Проект придуман <b>{p_i}</b> дней назад, но кажется была мысль и раньше {(p_i/365).toFixed(2)} лет назад<br></br>
+          В Jaguafrango мучаюсь уже <b>{j_t}</b> дней или {(j_t/365).toFixed(2)} лет<br></br>
+          Перебрался в Jaguapitã <b>{j_m}</b> дней назад или {(j_m/365).toFixed(2)} лет<br></br>
           Машину купил: <b>{c_c}</b> дней назад или {(c_c/365).toFixed(2)} лет назад<br></br>
           Каяк купил: <b>{k_c}</b> дней назад или {(k_c/365).toFixed(2)} лет назад<br></br>
+          ПМЖ получено: <b>{res}</b> дней назад или {(res/365).toFixed(2)} лет назад<br></br>
+          День первого лимона: <b>{limao}</b> дней назад или {(limao/365).toFixed(2)} лет назад<br></br>
 
           <br></br>
         
@@ -138,6 +146,9 @@ function AboutMe() {
         
       <img src={greenButton} alt="bsdf" />
       <hr></hr>
+      <WeatherVidget>
+        
+      </WeatherVidget>
     </div>
 
   )
