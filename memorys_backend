@@ -1,0 +1,4 @@
+python3 manage.py createsuperuser
+Username (leave blank to use 'user'): oleg
+Email address: oleg@upsrs.com.br
+Password: 11qq22ww

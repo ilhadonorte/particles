@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+from corsheaders.defaults import default_headers
 
 from pathlib import Path
 
@@ -128,11 +129,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 
 CORS_ORIGIN_ALLOW_ALL = True 
-
-
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [*list(default_headers), 'contenttype', 'X-Custom-Header']
 PARTICLE_TYPES = ['boson', 'meson', 'quark', 'lepton', 'unknown']

@@ -7,7 +7,12 @@ https://pdg.lbl.gov/
 python3 -m venv .venv
 source .venv/bin/activate
 
+source .venv/bin/activate && cd backend/ && python3 manage.py runserver
+cd frontend/ && npm run dev
+
 pip install pdg Django django-cors-headers djangorestframework
+
+npx tiged reduxjs/redux-templates/packages/vite-template-redux my-app
 
 sudo docker run -d --rm --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
 npm install @types/react @types/react-dom
@@ -18,6 +23,12 @@ ctrl+L очистить терминал
 Alt и стрелки меняют текущую строку местами с соседними.
 alt+z «« pt teclado
 win +f2 вставить текущую дату сделано с плагином Insert Date String
+
+2025-09-13
+учился по шагам работать с токенами, аксисом, узнал про разрешение заголовков и распаковку стандартных в список, учился реализовывать все это по FSD
+
+2025-09-10 
+вчера и сегодня отлаживал виджет погоды и переделывал по FSD
 
 2025-05-17
 добавлен выбиратель даты и разобрался как с datejs форматом работать чтобы пересчитывались периоды в событиях моей жизни

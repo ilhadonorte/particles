@@ -9,9 +9,9 @@ class Cidade {
     name: string;
     latitude: number;
     longitude: number;
-    temperatura: number;
+    temperatura?: number;
     
-  constructor(name, latitude, longitude, temperatura = -33) {
+  constructor(name: string, latitude: number, longitude: number, temperatura?: number) {
     this.name = name;
     this.latitude = latitude;
     this.longitude = longitude
@@ -21,11 +21,13 @@ class Cidade {
 
 let cidades: Cidade[] = []
 
-let Londrina = new Cidade("Londrina", -23.3103, -51.1628)
-let Voronezh = new Cidade("Voronezh", 51.672, 39.1843)
+let Londrina = new Cidade("Londrina", -23.25, -51.25, -33)
+let Voronezh = new Cidade("Voronezh", 51.6875, 39.1875, -34)
+let Pyatigorsk = new Cidade("Pyatigorsk", 44.0625, 43.0625, -55)
+let Moscow = new Cidade("Moskva", 55.75, 37.625, -555)
 
-cidades.push(Londrina, Voronezh)
-console.log("Вручную введен следующий список городов:", cidades)
+cidades.push(Londrina, Voronezh, Pyatigorsk, Moscow)
+// console.log("Вручную введен следующий список городов:", cidades)
 
 // надо сделать 2 массива, они используются для запроса попарно
 const latitudes = cidades.map(obj => obj.latitude)
@@ -37,8 +39,12 @@ const params = {
     "hourly": ["temperature_2m", "rain", "surface_pressure", "wind_speed_10m"],
     "forecast_days": 1,
 };
+const start = Date.now();
 const url = "https://api.open-meteo.com/v1/forecast";
 const responses = await fetchWeatherApi(url, params);
+const end = Date.now();
+const durationMs = end - start;
+console.log(`Request to open-meteo.com took ${durationMs} ms`);
 
 // Process 2 locations
 for (const response of responses) {
@@ -51,7 +57,7 @@ for (const response of responses) {
     
     console.log(
         `Из api.open-meteo.com пришли следующие данные на обработку:`,
-        `\nCoordinates: ${latitude}°N ${longitude}°E`,
+        `\nCoordinates: latitude: ${latitude}°N, longitude: ${longitude}°E`,
         `\nElevation: ${elevation}m asl`,
         `\nTimezone difference to GMT+0: ${utcOffsetSeconds}s`,
     );
@@ -76,16 +82,20 @@ for (const response of responses) {
     
     
     cidades.forEach(cidade => {
-        
-        if (longitude == cidade.longitude){
-            if (weatherData.hourly.surface_pressure[0] != null){ 
-                cidade.temperatura = weatherData.hourly.temperature_2m[0]
-                console.log(
-                    cidade.name, 
-                    cidade.longitude, 
-                    typeof(cidade.longitude), longitude, 
-                    cidade.temperatura, 
-                    longitude === cidade.longitude)
+                // console.log(
+                // `Cidade: ${cidade.name}, 
+                // latitude from api: ${latitude}, 
+                // latitude type: ${typeof(latitude)},
+                // cidade_latitude: ${cidade.latitude}, 
+                // cidade latitude type: ${typeof(cidade.latitude)}, 
+                // temperatura from api: ${weatherData.hourly.temperature_2m[0]},
+                // cidade.temperatura: ${cidade.temperatura} 
+                // ${latitude === cidade.latitude}`)  
+
+        if (latitude == cidade.latitude){
+            if (weatherData.hourly.temperature_2m[0] != null){ 
+                cidade.temperatura = weatherData.hourly.temperature_2m[0].toFixed(1)
+
             }
             else {console.log("Не пришли данные по температуре")}
         } 

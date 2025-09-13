@@ -7,14 +7,18 @@ export function WeatherVidget()
 {
      const [cidades, setCidades] = useState([...todasCidades])
 	 console.log("В компонент прилетело следующее: ", todasCidades)
-	 let content = todasCidades.map(
-		item => "В городе " +  item.name + "сейчас температура " + item.temperatura  
-	 )
+	//  let content = todasCidades.map(
+	// 	item => "В городе " +  item.name + " сейчас температура " + item.temperatura  
+	//  )
 	//  setCidades(cidades)
     return(
         <>
             WeatherVidget data: <br></br>
-            {content}
+            {
+                cidades.map((cidade) => 
+                <div key={cidade.name} >В {cidade.name} сейчас {cidade.temperatura}°C</div>
+                )
+            }
 
         </>
     )
